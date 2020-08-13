@@ -4,11 +4,30 @@
 
 	<groupId>marc</groupId>
 	<artifactId>java-utilities</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<packaging>jar</packaging>
 
 	<name>java-utilities</name>
+	<description>Usefull java utilities that I use in different projects</description>
 	<url>http://maven.apache.org</url>
+
+	<licenses>
+		<license>
+			<name> MIT License </name>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<id>marcperez06</id>
+			<name>Marc Pérez Rodríguez</name>
+			<url>https://github.com/marcperez06</url>
+			<properties>
+				<github>https://github.com/marcperez06</github>
+				<gitlab>https://gitlab.com/marcperez06</gitlab>
+			</properties>
+		</developer>
+	</developers>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
