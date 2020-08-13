@@ -455,8 +455,10 @@ public class ValidationUtils {
 
 	/**
 	 * Return true if the object is of the type specified, false otherwise
-	 * @param obj Object received
-	 * @param type Type of class specified
+	 * @param <T> - Generic type of object
+	 * @param <X> - Generic type of object
+	 * @param obj - Object received
+	 * @param type - Type of class specified
 	 * @return boolean that is 'true' is object belongs to class, 'false' otherwise
 	 */
 	public static <T, X> boolean objectIsOfType(T obj, Class<X> type) {
@@ -473,8 +475,10 @@ public class ValidationUtils {
 	
 	/**
 	 * Return true if all the objects inside list are of the type specified, false othersiwe
-	 * @param objects List of objects received
-	 * @param type Type of class specified
+	 * @param <T> - Generic type of object
+	 * @param <X> - Generic type of object
+	 * @param objects - List of objects received
+	 * @param type - Type of class specified
 	 * @return boolean that is 'true' is all objects belongs to class, 'false' otherwise
 	 */
 	public static <T, X> boolean listOfObjectAreOfType(List<T> objects, Class<X> type) {

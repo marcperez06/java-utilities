@@ -14,6 +14,7 @@
 	<licenses>
 		<license>
 			<name> MIT License </name>
+			<url>http://www.opensource.org/licenses/mit-license.php</url>
 		</license>
 	</licenses>
 
@@ -29,8 +30,15 @@
 		</developer>
 	</developers>
 
+	<scm>
+		<connection>scm:git:git://github.com/marcperez06/java-utilities.git</connection>
+		<developerConnection>scm:git:ssh://github.com:marcperez06/java-utilities.git</developerConnection>
+		<url>https://github.com/marcperez06/java-utilities</url>
+	</scm>
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<jdk.version>1.8</jdk.version>
 	</properties>
 
 	<dependencies>
@@ -115,4 +123,117 @@
 		</dependency>
 
 	</dependencies>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-gpg-plugin</artifactId>
+					<version>1.5</version>
+				</plugin>
+
+				<!-- Compiler plug-in -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.1</version>
+					<configuration>
+						<source>${jdk.version}</source>
+						<target>${jdk.version}</target>
+					</configuration>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-source-plugin</artifactId>
+					<version>3.1.0</version>
+
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>3.1.0</version>
+				</plugin>
+
+				<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-jar-plugin</artifactId> 
+					<version>3.1.0</version> </plugin> <plugin> <groupId>org.apache.maven.plugins</groupId> 
+					<artifactId>maven-shade-plugin</artifactId> <version>3.1.0</version> </plugin> -->
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-deploy-plugin</artifactId>
+					<version>3.0.0-M1</version>
+				</plugin>
+
+			</plugins>
+		</pluginManagement>
+
+		<plugins>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<phase>package</phase>
+						<goals>
+							<goal>jar-no-fork</goal>
+						</goals>
+						<configuration>
+							<!-- <outputDirectory>${project.build.directory}/classes/</outputDirectory> -->
+						</configuration>
+					</execution>
+
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<phase>package</phase>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+						<configuration>
+							<source>${jdk.version}</source>
+							<!-- <jarOutputDirectory>${project.build.directory}/classes/</jarOutputDirectory> 
+								<reportOutputDirectory>${project.build.directory}/classes/</reportOutputDirectory> -->
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-assembly-plugin</artifactId> 
+				<configuration> <appendAssemblyId>false</appendAssemblyId> <descriptors> 
+				<descriptor>resources/assembly/assembly_configuration.xml</descriptor> </descriptors> 
+				</configuration> <executions> <execution> <id>make-assembly</id> <!- this 
+				is used for inheritance merges -> <phase>package</phase> <!- bind to the 
+				packaging phase -> <goals> <goal>single</goal> </goals> <!- <configuration> 
+				<archive> <manifest> <mainClass>sogeti.mobile_testing_framework_base.App</mainClass> 
+				</manifest> </archive> </configuration> -> </execution> </executions> </plugin> -->
+
+		</plugins>
+
+	</build>
+
+	<distributionManagement>
+		<repository>
+			<id>Testing_Frameworks_Base</id>
+			<url>https://repo1.maven.org/maven2/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</distributionManagement>
+
 </project>

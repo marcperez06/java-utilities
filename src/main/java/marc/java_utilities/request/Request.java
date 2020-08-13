@@ -149,7 +149,6 @@ public class Request {
 	/**
 	 * Remove an extra header for request
 	 * @param key - String
-	 * @param value - String
 	 */
 	public void removeExtraHeader(String key) {
 		if (this.extraHeaders != null) {
