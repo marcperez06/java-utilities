@@ -1,5 +1,7 @@
 /target/
 /dependency-reduced-pom.xml
+/resources/maven_settings/
+/resources/gpg/
 .classpath
 .project
 .settings
