@@ -1,4 +1,4 @@
-package io.github.marcperez06.java_utilities.request;
+package io.github.marcperez06.java_utilities.api.request;
 
 public class RequestProxy {
 

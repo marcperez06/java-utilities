@@ -1,7 +1,7 @@
 /*
  * @author Aleix Marques Casanovas
  */
-package io.github.marcperez06.java_utilities.request;
+package io.github.marcperez06.java_utilities.api.request;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;

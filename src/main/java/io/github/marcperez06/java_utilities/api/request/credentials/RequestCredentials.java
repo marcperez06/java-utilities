@@ -1,4 +1,4 @@
-package io.github.marcperez06.java_utilities.request.credentials;
+package io.github.marcperez06.java_utilities.api.request.credentials;
 
 public class RequestCredentials {
 	

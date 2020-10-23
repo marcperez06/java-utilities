@@ -1,8 +1,11 @@
-package io.github.marcperez06.java_utilities.rest;
+/**
+ * @author Aleix Marques Casanovas
+ */
+package io.github.marcperez06.java_utilities.api.rest.interfaces;
 
-import io.github.marcperez06.java_utilities.request.Request;
-import io.github.marcperez06.java_utilities.request.RequestProxy;
-import io.github.marcperez06.java_utilities.request.Response;
+import io.github.marcperez06.java_utilities.api.request.Request;
+import io.github.marcperez06.java_utilities.api.request.RequestProxy;
+import io.github.marcperez06.java_utilities.api.request.Response;
 
 public interface RestClient {
 

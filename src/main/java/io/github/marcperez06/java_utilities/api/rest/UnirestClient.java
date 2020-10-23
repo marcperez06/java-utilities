@@ -1,10 +1,13 @@
-package io.github.marcperez06.java_utilities.rest;
+/**
+ * @author Aleix Marques Casanovas
+ * modified by @marcperez06
+ */
+package io.github.marcperez06.java_utilities.api.rest;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
@@ -12,11 +15,13 @@ import java.util.Optional;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import io.github.marcperez06.java_utilities.request.Request;
-import io.github.marcperez06.java_utilities.request.RequestProxy;
-import io.github.marcperez06.java_utilities.request.Response;
+import io.github.marcperez06.java_utilities.api.request.Request;
+import io.github.marcperez06.java_utilities.api.request.RequestProxy;
+import io.github.marcperez06.java_utilities.api.request.Response;
+import io.github.marcperez06.java_utilities.api.rest.exceptions.RestClientException;
+import io.github.marcperez06.java_utilities.api.rest.interfaces.RestClient;
+import io.github.marcperez06.java_utilities.api.rest.objects.RestGenericObject;
 import kong.unirest.ContentType;
-import kong.unirest.GenericType;
 import kong.unirest.HttpRequest;
 import kong.unirest.HttpRequestWithBody;
 import kong.unirest.HttpResponse;
@@ -28,17 +33,20 @@ import kong.unirest.gson.GsonObjectMapper;
 public class UnirestClient implements RestClient {
     private static final Log log = LogFactory.getLog(UnirestClient.class);
 
-    private Optional<String> certificateFilePath = Optional.empty();
-    private Optional<String> certificateFilePassword = Optional.empty();
-
-    private boolean useCertificate = false;
-    private boolean useProxy = false;
-
-    private Optional<Proxy> proxy = Optional.empty();
-
-    private ObjectMapper objectMapper = new GsonObjectMapper();
+    private boolean useCertificate;
+    private boolean useProxy;
+    private Optional<String> certificateFilePath;
+    private Optional<String> certificateFilePassword;
+    private Optional<Proxy> proxy;
+    private ObjectMapper objectMapper;
 
     public UnirestClient() {
+    	this.useCertificate = false;
+    	this.useProxy = false;
+    	this.certificateFilePath = Optional.empty();
+    	this.certificateFilePassword = Optional.empty();
+    	this.proxy = Optional.empty();
+    	this.objectMapper = new GsonObjectMapper();
         Unirest.config().setObjectMapper(objectMapper);
     }
 
@@ -66,7 +74,7 @@ public class UnirestClient implements RestClient {
             Unirest.config().clientCertificateStore(certificateFilePath.get(), certificateFilePassword.get());
             useCertificate = true;
         } else {
-            throw new JiraApiWrapperException("To use certificate a Certificate File Path and Certificate File Password must be provided.");
+            throw new RestClientException("To use certificate a Certificate File Path and Certificate File Password must be provided.");
         }
     }
 
@@ -82,7 +90,7 @@ public class UnirestClient implements RestClient {
             Unirest.config().proxy(proxy.get());
             useProxy = true;
         } else {
-            throw new JiraApiWrapperException("To use a Proxy, a Proxy configuration must be provided.");
+            throw new RestClientException("To use a Proxy, a Proxy configuration must be provided.");
         }
     }
 
@@ -114,7 +122,7 @@ public class UnirestClient implements RestClient {
     }
 
     @Override
-    @SuppressWarnings("uncheked")
+    @SuppressWarnings("unchecked")
     public <T> Response<T> send(Request request) {
         @SuppressWarnings("rawtypes")
         HttpRequest unirestRequest;
@@ -136,7 +144,7 @@ public class UnirestClient implements RestClient {
                 break;
             default:
                 log.debug(request);
-                throw new JiraApiWrapperException("Unable to determine HttpMethod for Request");
+                throw new RestClientException("Unable to determine HttpMethod for Request");
         }
 
         unirestRequest = unirestRequest.routeParam(request.getRouteParams())
@@ -164,7 +172,7 @@ public class UnirestClient implements RestClient {
         if (request.noResponseObjectNeeded()) {
             unirestResponse = unirestRequest.asEmpty();
         } else {
-            unirestResponse = unirestRequest.asObject(new GenericObject<T>(request.getResponseType()));
+            unirestResponse = unirestRequest.asObject(new RestGenericObject<T>(request.getResponseType()));
         }
 
         return asResponse(unirestResponse);
@@ -203,18 +211,6 @@ public class UnirestClient implements RestClient {
         }
 
         return response;
-    }
-    
-    class GenericObject<T> extends GenericType<T> {
-    	private Type properType;
-    	
-    	public GenericObject(Type type) {
-    		this.properType = type;
-    	}
-    	
-    	public Type getType() {
-            return this.properType;
-        }
     }
 
 }

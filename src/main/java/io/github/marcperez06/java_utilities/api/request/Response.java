@@ -2,7 +2,7 @@
  * @author Aleix Marques Casanovas
  * modified by @marcperez06
  */
-package io.github.marcperez06.java_utilities.request;
+package io.github.marcperez06.java_utilities.api.request;
 
 import java.util.Optional;
 

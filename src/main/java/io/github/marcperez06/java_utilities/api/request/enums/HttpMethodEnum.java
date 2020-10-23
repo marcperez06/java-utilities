@@ -1,4 +1,4 @@
-package io.github.marcperez06.java_utilities.request.enums;
+package io.github.marcperez06.java_utilities.api.request.enums;
 
 public enum HttpMethodEnum {
     GET,

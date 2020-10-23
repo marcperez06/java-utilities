@@ -1,14 +1,14 @@
 /**
  * @author Aleix Marques Casanovas
  */
-package io.github.marcperez06.java_utilities.request;
+package io.github.marcperez06.java_utilities.api.request;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.github.marcperez06.java_utilities.request.credentials.RequestCredentials;
-import io.github.marcperez06.java_utilities.request.enums.HttpMethodEnum;
+import io.github.marcperez06.java_utilities.api.request.credentials.RequestCredentials;
+import io.github.marcperez06.java_utilities.api.request.enums.HttpMethodEnum;
 
 public class Request {
 
