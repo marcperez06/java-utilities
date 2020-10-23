@@ -1,8 +1,8 @@
 package io.github.marcperez06.java_utilities.rest;
 
-import sogeti.jira_api_wrapper.core.utils.request.Request;
-import sogeti.jira_api_wrapper.core.utils.request.RequestProxy;
-import sogeti.jira_api_wrapper.core.utils.request.Response;
+import io.github.marcperez06.java_utilities.request.Request;
+import io.github.marcperez06.java_utilities.request.RequestProxy;
+import io.github.marcperez06.java_utilities.request.Response;
 
 public interface RestClient {
 

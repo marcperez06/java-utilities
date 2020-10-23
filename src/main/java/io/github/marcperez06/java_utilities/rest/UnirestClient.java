@@ -12,20 +12,18 @@ import java.util.Optional;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import io.github.marcperez06.java_utilities.request.Request;
+import io.github.marcperez06.java_utilities.request.RequestProxy;
+import io.github.marcperez06.java_utilities.request.Response;
 import kong.unirest.ContentType;
 import kong.unirest.GenericType;
-import kong.unirest.GsonObjectMapper;
 import kong.unirest.HttpRequest;
 import kong.unirest.HttpRequestWithBody;
 import kong.unirest.HttpResponse;
-import kong.unirest.MultipartBody;
 import kong.unirest.ObjectMapper;
 import kong.unirest.Proxy;
 import kong.unirest.Unirest;
-import sogeti.jira_api_wrapper.core.exceptions.JiraApiWrapperException;
-import sogeti.jira_api_wrapper.core.utils.request.Request;
-import sogeti.jira_api_wrapper.core.utils.request.RequestProxy;
-import sogeti.jira_api_wrapper.core.utils.request.Response;
+import kong.unirest.gson.GsonObjectMapper;
 
 public class UnirestClient implements RestClient {
     private static final Log log = LogFactory.getLog(UnirestClient.class);
