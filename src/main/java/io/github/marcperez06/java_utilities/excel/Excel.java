@@ -307,11 +307,11 @@ public class Excel {
 	 * @param value - String value of cell
 	 * @return Map with all the excels rows values that are equals to value specified - Map&lt;String, List&lt;String&gt;&gt;
 	 */
-	public Map<String, List<String>> getTestDataOfColumnWithValue(int sheetIndex, String columnName, String value) {
+	public Map<String, List<String>> getRowsFromColumnValue(int sheetIndex, String columnName, String value) {
 		Map<String, List<String>> map = new HashMap<String, List<String>>();
         if (!this.sheets.isEmpty() && sheetIndex < this.sheets.size()) {
         	Sheet sheet = this.sheets.get(sheetIndex);
-        	map = this.getTestDataOfColumnWithValue(sheet, columnName, value);
+        	map = this.getRowsFromColumnValue(sheet, columnName, value);
         }
 		return map;
 	}
@@ -323,16 +323,16 @@ public class Excel {
 	 * @param value - String value of cell
 	 * @return Map with all the excels rows values that are equals to value specified - Map&lt;String, List&lt;String&gt;&gt;
 	 */
-	public Map<String, List<String>> getTestDataOfColumnWithValue(String sheetName, String columnName, String value) {
+	public Map<String, List<String>> getRowsFromColumnValue(String sheetName, String columnName, String value) {
 		Map<String, List<String>> map = new HashMap<String, List<String>>();
 		Sheet sheet = this.getSheetByName(sheetName);
         if (sheet != null) {
-        	map = this.getTestDataOfColumnWithValue(sheet, columnName, value);
+        	map = this.getRowsFromColumnValue(sheet, columnName, value);
         }
 		return map;
 	}
 	
-	private Map<String, List<String>> getTestDataOfColumnWithValue(Sheet sheet, String columnName, String value) {
+	private Map<String, List<String>> getRowsFromColumnValue(Sheet sheet, String columnName, String value) {
 		List<String> mapKeys = this.getSheetHeaders(sheet);
 		Map<String, List<String>> map = this.initializeExcelMap(mapKeys);
         boolean found = false;
