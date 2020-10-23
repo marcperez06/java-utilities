@@ -103,12 +103,19 @@
 			<version>2.0.19</version>
 		</dependency>
 
-		<!-- *********** REQUEST DEPENDENCIES *********** -->
+		<!-- *********** REST DEPENDENCIES *********** -->
 
 		<!-- https://mvnrepository.com/artifact/com.konghq/unirest-java -->
 		<dependency>
 			<groupId>com.konghq</groupId>
 			<artifactId>unirest-java</artifactId>
+			<version>3.9.00</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.konghq/unirest-object-mappers-gson -->
+		<dependency>
+			<groupId>com.konghq</groupId>
+			<artifactId>unirest-object-mappers-gson</artifactId>
 			<version>3.9.00</version>
 		</dependency>
 
