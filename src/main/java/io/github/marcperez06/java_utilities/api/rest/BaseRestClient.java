@@ -37,11 +37,13 @@ public abstract class BaseRestClient implements IRestClient {
         this.useCertificate();
     }
 	
+	@Override
 	public File downloadFile(String url) {
 		String fileName = RandomDataGenerator.getStringInLowerCase(5);
 		return this.downloadFile(url, fileName);
 	}
 	
+	@Override
 	public File downloadFile(String url, String fileName) {
 		//DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm_ss");  
         //LocalDateTime now = LocalDateTime.now();
@@ -50,10 +52,12 @@ public abstract class BaseRestClient implements IRestClient {
 		return this.downloadFile(url, fileName, savePath);
 	}
 	
+	@Override
 	public File downloadFile(String url, String fileName, String savePath) {
 		return this.downloadFile(url, fileName, savePath, null);
 	}
 	
+	@Override
 	public File downloadFile(String urlStr, String fileName, String savePath, RequestCredentials credentials) {
 		// String urlStr = "https://teamcity.serviciosdetesting.com/httpAuth/app/rest/builds/4/artifacts/content/app-alpha.apk";
 		File file = null;
