@@ -66,7 +66,6 @@ public abstract class BaseRestClient implements IRestClient {
 	
 	@Override
 	public File downloadFile(String urlStr, String fileName, String savePath, RequestCredentials credentials) {
-		// String urlStr = "https://teamcity.serviciosdetesting.com/httpAuth/app/rest/builds/4/artifacts/content/app-alpha.apk";
 		File file = null;
 		
 		try {
@@ -98,8 +97,7 @@ public abstract class BaseRestClient implements IRestClient {
         		byte[] encode = Base64.getEncoder().encode(userPass.getBytes());
                 auth = "Basic " + new String(encode);
         	} else {
-        		byte[] encode = Base64.getEncoder().encode(credentials.getToken().getBytes());
-        		auth = "Bearer " + new String(encode);
+        		auth = "Bearer " + credentials.getToken();
         	}
         	
         	urlConnection.setRequestProperty ("Authorization", auth);	
