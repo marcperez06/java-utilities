@@ -11,6 +11,7 @@ import java.util.Optional;
 import io.github.marcperez06.java_utilities.api.request.credentials.RequestCredentials;
 import io.github.marcperez06.java_utilities.api.rest.exceptions.RestClientException;
 import io.github.marcperez06.java_utilities.api.rest.interfaces.IRestClient;
+import io.github.marcperez06.java_utilities.file.FileUtils;
 import io.github.marcperez06.java_utilities.logger.Logger;
 import io.github.marcperez06.java_utilities.testdata.RandomDataGenerator;
 
@@ -109,6 +110,8 @@ public abstract class BaseRestClient implements IRestClient {
 		byte[] buffer = new byte[1024];
 		int count = 0;
 		
+		FileUtils.createFileIfNotExist(savePath);
+		
 		try {
 			
 			InputStream input = urlConnection.getInputStream();
@@ -120,7 +123,8 @@ public abstract class BaseRestClient implements IRestClient {
 
 			file.close();
 			input.close();
-			
+			writeFile = true;
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			writeFile = false;
