@@ -58,6 +58,13 @@ public abstract class BaseRestClient implements IRestClient {
 	}
 	
 	@Override
+	public File downloadFile(String url, String fileName, RequestCredentials credentials) {
+		String filePath = new File("").getAbsolutePath();
+		String savePath = filePath + File.separator + "downloads" + File.separator + fileName;
+		return this.downloadFile(url, fileName, savePath, credentials);
+	}
+	
+	@Override
 	public File downloadFile(String urlStr, String fileName, String savePath, RequestCredentials credentials) {
 		// String urlStr = "https://teamcity.serviciosdetesting.com/httpAuth/app/rest/builds/4/artifacts/content/app-alpha.apk";
 		File file = null;

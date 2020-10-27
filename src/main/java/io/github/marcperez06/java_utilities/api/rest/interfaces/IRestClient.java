@@ -23,5 +23,6 @@ public interface IRestClient {
     public File downloadFile(String url);
     public File downloadFile(String url, String fileName);
     public File downloadFile(String url, String fileName, String savePath);
+    public File downloadFile(String url, String fileName, RequestCredentials credentials);
     public File downloadFile(String url, String fileName, String savePath, RequestCredentials credentials);
 }
