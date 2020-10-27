@@ -19,7 +19,6 @@ import io.github.marcperez06.java_utilities.api.request.Request;
 import io.github.marcperez06.java_utilities.api.request.RequestProxy;
 import io.github.marcperez06.java_utilities.api.request.Response;
 import io.github.marcperez06.java_utilities.api.rest.exceptions.RestClientException;
-import io.github.marcperez06.java_utilities.api.rest.interfaces.RestClient;
 import io.github.marcperez06.java_utilities.api.rest.objects.RestGenericObject;
 import kong.unirest.ContentType;
 import kong.unirest.HttpRequest;
@@ -30,21 +29,14 @@ import kong.unirest.Proxy;
 import kong.unirest.Unirest;
 import kong.unirest.gson.GsonObjectMapper;
 
-public class UnirestClient implements RestClient {
+public class UnirestClient extends BaseRestClient {
     private static final Log log = LogFactory.getLog(UnirestClient.class);
 
-    private boolean useCertificate;
-    private boolean useProxy;
-    private Optional<String> certificateFilePath;
-    private Optional<String> certificateFilePassword;
-    private Optional<Proxy> proxy;
+    protected Optional<Proxy> proxy;
     private ObjectMapper objectMapper;
 
     public UnirestClient() {
-    	this.useCertificate = false;
-    	this.useProxy = false;
-    	this.certificateFilePath = Optional.empty();
-    	this.certificateFilePassword = Optional.empty();
+    	super();
     	this.proxy = Optional.empty();
     	this.objectMapper = new GsonObjectMapper();
         Unirest.config().setObjectMapper(objectMapper);
@@ -56,23 +48,17 @@ public class UnirestClient implements RestClient {
     }
 
     @Override
-    public void setCertificate(String certificateFilePath, String certificateFilePassword) {
-        this.certificateFilePath = Optional.of(certificateFilePath);
-        this.certificateFilePassword = Optional.of(certificateFilePassword);
-        this.useCertificate();
-    }
-
-    @Override
     public void setProxy(RequestProxy requestProxy) {
-        this.proxy = Optional.of(new Proxy(requestProxy.getHost(), requestProxy.getPort(), requestProxy.getUsername(), requestProxy.getPassword()));
-        useProxy();
+        this.proxy = Optional.of(new Proxy(requestProxy.getHost(), requestProxy.getPort(), 
+        									requestProxy.getUsername(), requestProxy.getPassword()));
+        this.useProxy();
     }
 
     @Override
     public void useCertificate() {
-        if (certificateFilePath.isPresent() && certificateFilePassword.isPresent()) {
-            Unirest.config().clientCertificateStore(certificateFilePath.get(), certificateFilePassword.get());
-            useCertificate = true;
+        if (super.certificateFilePath.isPresent() && super.certificateFilePassword.isPresent()) {
+            Unirest.config().clientCertificateStore(super.certificateFilePath.get(), super.certificateFilePassword.get());
+            super.useCertificate = true;
         } else {
             throw new RestClientException("To use certificate a Certificate File Path and Certificate File Password must be provided.");
         }
@@ -80,15 +66,15 @@ public class UnirestClient implements RestClient {
 
     @Override
     public void disableCertificate() {
-        useCertificate = false;
-        resetConfiguration();
+        super.useCertificate = false;
+        this.resetConfiguration();
     }
 
     @Override
     public void useProxy() {
-        if (proxy.isPresent()) {
-            Unirest.config().proxy(proxy.get());
-            useProxy = true;
+        if (this.proxy.isPresent()) {
+            Unirest.config().proxy(this.proxy.get());
+            super.useProxy = true;
         } else {
             throw new RestClientException("To use a Proxy, a Proxy configuration must be provided.");
         }
@@ -96,8 +82,8 @@ public class UnirestClient implements RestClient {
 
     @Override
     public void disableProxy() {
-        useProxy = false;
-        resetConfiguration();
+        super.useProxy = false;
+        this.resetConfiguration();
     }
 
     public void setObjectMapper(ObjectMapper mapper) {
@@ -106,17 +92,17 @@ public class UnirestClient implements RestClient {
     }
 
     public void resetObjectMapper() {
-        objectMapper = new GsonObjectMapper();
-        Unirest.config().setObjectMapper(objectMapper);
+        this.objectMapper = new GsonObjectMapper();
+        Unirest.config().setObjectMapper(this.objectMapper);
     }
 
     private void resetConfiguration() {
         Unirest.shutDown();
-        Unirest.config().setObjectMapper(objectMapper);
-        if (useCertificate) {
+        Unirest.config().setObjectMapper(this.objectMapper);
+        if (super.useCertificate) {
             useCertificate();
         }
-        if (useProxy) {
+        if (super.useProxy) {
             useProxy();
         }
     }

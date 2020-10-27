@@ -7,7 +7,7 @@ import io.github.marcperez06.java_utilities.api.request.Request;
 import io.github.marcperez06.java_utilities.api.request.RequestProxy;
 import io.github.marcperez06.java_utilities.api.request.Response;
 
-public interface RestClient {
+public interface IRestClient {
 
     public void verifySsl(boolean verifySsl);
     public void setCertificate(String certificateFilePath, String certificateFilePassword);
