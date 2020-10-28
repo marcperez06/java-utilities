@@ -17,6 +17,8 @@ import io.github.marcperez06.java_utilities.testdata.RandomDataGenerator;
 
 public abstract class BaseRestClient implements IRestClient {
 	
+	private static final String USER_DIR = System.getProperty("user.dir");
+	
 	protected boolean useCertificate;
     protected boolean useProxy;
     protected Optional<String> certificateFilePath;
@@ -48,8 +50,7 @@ public abstract class BaseRestClient implements IRestClient {
 	public File downloadFile(String url, String fileName) {
 		//DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm_ss");  
         //LocalDateTime now = LocalDateTime.now();
-		String filePath = new File("").getAbsolutePath();
-		String savePath = filePath + File.separator + "downloads" + File.separator + fileName;
+		String savePath = USER_DIR + File.separator + "downloads" + File.separator + fileName;
 		return this.downloadFile(url, fileName, savePath);
 	}
 	
@@ -60,8 +61,7 @@ public abstract class BaseRestClient implements IRestClient {
 	
 	@Override
 	public File downloadFile(String url, String fileName, RequestCredentials credentials) {
-		String filePath = new File("").getAbsolutePath();
-		String savePath = filePath + File.separator + "downloads" + File.separator + fileName;
+		String savePath = USER_DIR + File.separator + "downloads" + File.separator + fileName;
 		return this.downloadFile(url, fileName, savePath, credentials);
 	}
 	
