@@ -1,5 +1,6 @@
 /**
  * Clase que permite leer un fichero excel utilizando la libreria de Apache POI
+ * 
  * @author Marc Pérez
  */
 package io.github.marcperez06.java_utilities.excel;
@@ -47,7 +48,7 @@ public class Excel {
 	
 	/**
 	 * Gets the sheets of a XLS file
-	 * @return A list of the sheets in the file - List&lt;Sheet&gt;
+	 * @return List&lt;Sheet&gt; - A list of the sheets in the file
 	 */
 	public List<Sheet> getSheets() {
 		List<Sheet> sheetsList = new ArrayList<Sheet>();
@@ -79,22 +80,22 @@ public class Excel {
 			Logger.error(e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * Read excel sheet by the name of sheet
 	 * @param <T> - Generic object returned
-	 * @param sheetName Name of the sheet will be readed
-	 * @return Map with all the content of excel (key: column) - Map&lt;String, List&lt;T&gt;&gt;
+	 * @param sheetName - Name of the sheet will be readed
+	 * @return List&lt;String&gt; - List with all the content of excel
 	 */
-	public <T> Map<String, List<T>> readSheet(String sheetName) {
+	public <T> List<T> readSheetInListFormat(String sheetName) {
 		int sheetIndex = this.getSheetIndexByName(sheetName);
-		return this.readSheet(sheetIndex);
+		return this.readSheetInListFormat(sheetIndex);
 	}
-	
+
 	/**
 	 * This method returns the sheet index of the given name in this class's list of sheets
 	 * @param name - Name of the sheet to look for
-	 * @return If found, index of sheet with name equal to the name parameter, -1 otherwise
+	 * @return int -If found, index of sheet with name equal to the name parameter, -1 otherwise
 	 */
 	public int getSheetIndexByName(String name) {
 		int index = -1;
@@ -112,6 +113,71 @@ public class Excel {
 		return index;
 	}
 	
+	/**
+	 * Read excel sheet by the index of sheet
+	 * @param <T> - Generic object returned
+	 * @param sheetIndex - Number of the sheet will be readed
+	 * @return List&lt;String&gt; - List with all the content of excel
+	 */
+	public <T> List<T> readSheetInListFormat(int sheetIndex) {
+        List<T> list = new ArrayList<T>();
+        
+        if (sheetIndex > -1) {
+
+        	Sheet sheet = this.sheets.get(sheetIndex);
+
+            if (!excelPath.isEmpty() && sheet != null) {
+            	list = this.readRowsLine(sheet);
+            }
+
+        }
+
+        return list;
+	}
+	
+	private <T> List<T> readRowsLine(Sheet sheet) {
+		List<T> list = new ArrayList<T>();
+        int rowCount = 0;
+        int cellSize = 0;
+        
+		for (Row row : sheet) {
+			
+    		if (rowCount == 0) {
+    			cellSize = (int) row.getLastCellNum();
+    		}
+    		
+    		this.readCells(list, row, rowCount, cellSize);
+
+            rowCount++;
+        }
+		
+		return list;
+	}
+	
+	private <T> void readCells(List<T> list, Row row, int rowCount, int cellSize) {
+		int cellCount = 0;
+
+		while(cellCount < cellSize) {
+			
+			Cell cell = row.getCell(cellCount);
+			T value = this.getCellValue(cell);
+			list.add(value);
+
+            cellCount++;
+		}
+	}
+	
+	/**
+	 * Read excel sheet by the name of sheet
+	 * @param <T> - Generic object returned
+	 * @param sheetName Name of the sheet will be readed
+	 * @return Map with all the content of excel (key: column) - Map&lt;String, List&lt;T&gt;&gt;
+	 */
+	public <T> Map<String, List<T>> readSheet(String sheetName) {
+		int sheetIndex = this.getSheetIndexByName(sheetName);
+		return this.readSheet(sheetIndex);
+	}
+
 	/**
 	 * Read excel sheet by the index of sheet
 	 * @param <T> - Generic object returned

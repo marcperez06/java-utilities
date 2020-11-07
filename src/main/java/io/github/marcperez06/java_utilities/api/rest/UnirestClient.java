@@ -110,58 +110,77 @@ public class UnirestClient extends BaseRestClient {
     @Override
     @SuppressWarnings("unchecked")
     public <T> Response<T> send(Request request) {
-        @SuppressWarnings("rawtypes")
-        HttpRequest unirestRequest;
-        switch (request.getMethod()) {
-            case GET:
-                unirestRequest = Unirest.get(request.getUrl());
-                break;
-            case POST:
-                unirestRequest = Unirest.post(request.getUrl());
-                break;
-            case PUT:
-                unirestRequest = Unirest.put(request.getUrl());
-                break;
-            case PATCH:
-                unirestRequest = Unirest.patch(request.getUrl());
-                break;
-            case DELETE:
-                unirestRequest = Unirest.delete(request.getUrl());
-                break;
-            default:
-                log.debug(request);
-                throw new RestClientException("Unable to determine HttpMethod for Request");
+    	HttpResponse<T> unirestResponse = null;
+    	
+        try {
+        	HttpRequest<?> unirestRequest = this.createRequest(request);
+        	
+        	this.addCredentials(unirestRequest, request);
+        	this.addRequestParams(unirestRequest, request);
+			
+			if (request.noResponseObjectNeeded()) {
+	            unirestResponse = unirestRequest.asEmpty();
+	        } else {
+	            unirestResponse = unirestRequest.asObject(new RestGenericObject<T>(request.getResponseType()));
+	        }
+        	
+        } catch (RestClientException e) {
+        	throw e;
         }
 
-        unirestRequest = unirestRequest.routeParam(request.getRouteParams())
-            .queryString(request.getQueryParams())
-            .headers(request.getHeaders());
+        return this.asResponse(unirestResponse);
+    }
+    
+    private HttpRequest<?> createRequest(Request request) throws RestClientException {
+    	HttpRequest<?> unirestRequest = null;
+    	switch (request.getMethod()) {
+	        case GET:
+	            unirestRequest = Unirest.get(request.getUrl());
+	            break;
+	        case POST:
+	            unirestRequest = Unirest.post(request.getUrl());
+	            break;
+	        case PUT:
+	            unirestRequest = Unirest.put(request.getUrl());
+	            break;
+	        case PATCH:
+	            unirestRequest = Unirest.patch(request.getUrl());
+	            break;
+	        case DELETE:
+	            unirestRequest = Unirest.delete(request.getUrl());
+	            break;
+	        default:
+	            log.debug(request);
+	            throw new RestClientException("Unable to determine HttpMethod for Request");
+	    }
+    	return unirestRequest;
+    }
+    
+    private void addCredentials(HttpRequest<?> unirestRequest, Request request) {
+    	if (request.useCredentials()) {
+			if (request.useBearerToken()) {
+				String token = request.getCredentials().getToken();
+				unirestRequest = unirestRequest.header("Authorization", "Bearer " + token);
+			} else {
+				String user = request.getCredentials().getUser();
+				String password = request.getCredentials().getPassword();
+				unirestRequest = unirestRequest.basicAuth(user, password);
+			}
+		}
+    }
+    
+    private void addRequestParams(HttpRequest<?> unirestRequest, Request request) {
+		unirestRequest.routeParam(request.getRouteParams());
+		unirestRequest.queryString(request.getQueryParams());
+		unirestRequest.headers(request.getHeaders());
 
-        if (unirestRequest instanceof HttpRequestWithBody) {
-            if (request.sendAsForm()) {
-                this.sendBodyAsFormData(request, unirestRequest);
-            } else {
-                unirestRequest = ((HttpRequestWithBody) unirestRequest).body(request.getBody());
-            }
-        }
-
-        if (request.useCredentials()) {
-            if (request.useBearerToken()) {
-                unirestRequest = unirestRequest.header("Authorization", "Bearer " + request.getCredentials().getToken());
-            } else {
-                unirestRequest = unirestRequest.basicAuth(request.getCredentials().getUser(), request.getCredentials().getPassword());
-            }
-        }
-        
-        HttpResponse<T> unirestResponse;
-
-        if (request.noResponseObjectNeeded()) {
-            unirestResponse = unirestRequest.asEmpty();
-        } else {
-            unirestResponse = unirestRequest.asObject(new RestGenericObject<T>(request.getResponseType()));
-        }
-
-        return asResponse(unirestResponse);
+		if (unirestRequest instanceof HttpRequestWithBody) {
+			if (request.sendAsForm()) {
+				this.sendBodyAsFormData(request, unirestRequest);
+			} else {
+				unirestRequest = ((HttpRequestWithBody) unirestRequest).body(request.getBody());
+			}
+		}
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
