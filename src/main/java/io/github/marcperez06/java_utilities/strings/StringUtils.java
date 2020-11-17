@@ -25,6 +25,16 @@ public class StringUtils {
 
 	private StringUtils() {}
 	
+	public static boolean isBlank(String text) {
+		boolean isBlank = (text == null);
+		
+		if (!isBlank) {
+			isBlank = text.trim().isEmpty();
+		}
+		
+		return isBlank;
+	}
+	
 	public static String capitalizeWord(String word) {
 		String capitalize = "";
 		if (word != null && !word.isEmpty()) {
@@ -88,19 +98,12 @@ public class StringUtils {
 		}
 		return builder.toString();
 	}
-	
-	@SuppressWarnings("unchecked")
-	public static <T, S> boolean addOrAppendStringInMap(Map<T, S> map, T key, S value) {
+
+	public static <T> boolean addOrAppendStringInMap(Map<T, String> map, T key, String value) {
 		boolean success = false;
 		if (map != null) {
 			if (map.containsKey(key)) {
-				
-				if (value instanceof String) {
-					S finalValue = (S) (map.get(key) + " " + value);
-					map.put(key, finalValue);
-					success = true;
-				}
-				
+				appendStringInMap(map, key, value);
 			} else {
 				map.put(key, value);
 				success = true;
