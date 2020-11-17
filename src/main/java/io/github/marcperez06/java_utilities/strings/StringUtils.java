@@ -21,6 +21,10 @@ public class StringUtils {
 												"super", "synchronized", "this", "throw", "throws", "void", "volatile",
 												"while", "const", "goto"};
 	
+	private static String[] RESERVED_JAVA_TYPES = {"int", "double", "float", "long", "boolean", 
+													"Integer", "Double", "Float", "Long", 
+													"Object", "String", "Boolean"};
+	
 	public static final Pattern DIACRITICS_AND_FRIENDS = Pattern.compile("[\\p{InCombiningDiacriticalMarks}\\p{IsLm}\\p{IsSk}]+");
 
 	private StringUtils() {}
@@ -302,6 +306,16 @@ public class StringUtils {
 			isReserved = word.equals(RESERVED_KEYWORDS[i]);
 		}
 		return isReserved;
+	}
+	
+	public static boolean isJavaVariableType(String variableType) {
+		boolean isJavaVariableType = false;
+		if (!isJavaVariableType) {
+			for (int i = 0; i < RESERVED_JAVA_TYPES.length && !isJavaVariableType; i++) {
+				isJavaVariableType = variableType.equals(RESERVED_JAVA_TYPES[i]);
+			}
+		}
+		return isJavaVariableType;
 	}
 	
 }
