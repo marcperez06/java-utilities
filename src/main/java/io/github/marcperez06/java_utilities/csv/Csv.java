@@ -1,3 +1,8 @@
+/**
+ * This class allows to read a Csv content, specifying the splitter used.
+ * 
+ * @author marcperez06
+ */
 package io.github.marcperez06.java_utilities.csv;
 
 import java.util.ArrayList;
@@ -12,10 +17,19 @@ import io.github.marcperez06.java_utilities.strings.StringUtils;
 
 public class Csv {
 	
+	private String splitter;
 	private String csvPath;
+	private List<String> lines;
 	private Map<String, List<String>> content; // Key --> column | Value --> value of row
 	
 	public Csv(String csvPath) {
+		this(csvPath, ",");
+	}
+	
+	public Csv(String csvPath, String splitter) {
+		this.lines = new ArrayList<String>();
+		this.content = new HashMap<String, List<String>>();
+		this.splitter = splitter;
 		this.setPath(csvPath);
 	}
 	
@@ -28,14 +42,25 @@ public class Csv {
 		this.readCsv();
 	}
 	
+	public List<String> getLines() {
+		return this.lines;
+	}
+	
 	public Map<String, List<String>> getContent() {
 		return this.content;
 	}
 	
 	private void readCsv() {
+		this.lines = FileUtils.getStringListOfFile(this.csvPath);
 		this.content = FileUtils.getMapOfCsv(this.csvPath);
 	}
 	
+	/**
+	 * Return all rows that contains the value in the column specified
+	 * @param columnName - String column name
+	 * @param value - String value for finding rows that contains this value.
+	 * @return Map&lt;String, String&gt; - Rows in Map of List of String, where the rows contains the value in the column specified
+	 */
 	public Map<String, List<String>> getContentByColumWithValue(String columnName, String value) {
 		Map<String, List<String>> partialContent = new HashMap<String, List<String>>();
 		List<String> columnValues = this.content.get(columnName);
@@ -46,8 +71,7 @@ public class Csv {
 				List<String> csvValues = this.getValuesByIndex(this.content.get(entry.getKey()), indexList);
 				partialContent.put(entry.getKey(), csvValues);
 			}
-			
-			
+
 		}
 		return partialContent;
 	}
@@ -64,11 +88,15 @@ public class Csv {
 		return valuesByIndex;
 	}
 	
-	public String getColumnsLine() {
-		return StringUtils.concatListOfString(this.getColumns(), ", ");
+	public String getKeysLine() {
+		return StringUtils.concatListOfString(this.getKeys(), this.splitter + " ");
 	}
 	
-	public List<String> getColumns() {
+	/**
+	 * Return a list with the values of the first line of csv.
+	 * @return List&lt;String&gt; - Return a list of string with the values of the first line of csv
+	 */
+	public List<String> getKeys() {
 		List<String> columns = new ArrayList<String>();
 		
 		for (String key : this.content.keySet()) {
@@ -81,30 +109,28 @@ public class Csv {
 	/**
 	 * First line starts in 0 index
 	 * @param index - int (positive)
-	 * @return String - row line
+	 * @return String - Row line
 	 */
 	public String getRowLine(int index) {
-		return StringUtils.concatListOfString(this.getRow(index), ", ");
+		return StringUtils.concatListOfString(this.getRow(index), this.splitter+ " ");
 	}
 	
 	/**
 	 * First line starts in 0 index
 	 * @param index - int (positive)
-	 * @return List&lt;String&gt; row values in list of String
+	 * @return List&lt;String&gt; - Row values in list of String
 	 */
 	public List<String> getRow(int index) {
 		List<String> row = new ArrayList<String>();
 		
 		if (index >= 0) {
 			for (Entry<String, List<String>> entry : this.content.entrySet()) {
-				
 				String value = "";
 				if (index < entry.getValue().size()) {
 					value = entry.getValue().get(index);
 				}
 				
 				row.add(value);
-
 			}
 		}
 
@@ -114,7 +140,7 @@ public class Csv {
 	/**
 	 * First line starts in 0 index
 	 * @param index - int (positive)
-	 * @return Map&lt;String, String&gt; row values in Map of String, where key of map is column value
+	 * @return Map&lt;String, String&gt; - Row values in Map of String, where key of map is column value
 	 */
 	public Map<String, String> getRowContent(int index) {
 		Map<String, String> rowContent = new HashMap<String, String>();
@@ -128,7 +154,6 @@ public class Csv {
 				}
 				
 				rowContent.put(entry.getKey(), value);
-
 			}
 		}
 		
