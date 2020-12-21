@@ -1,5 +1,6 @@
  package io.github.marcperez06.java_utilities.collection.list;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -152,10 +153,6 @@ public class ListUtils {
 		return success;
 	}
 	
-	//TODO: Discutir en Code Review si es realmente util o no
-	/* Esta pensada para que llame al equals definido en la clase, es decir, 
-	 * podria tener un objeto con id y todo lo demas vacio y en la lista tener el objeto rellenado correctamente.
-	 */
 	public static <T> T getObjectInList(List<T> list, T value) {
 		boolean founded = false;
 		T result = null;
@@ -173,6 +170,21 @@ public class ListUtils {
 			result = null;
 		}
 		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static <T> T[] toArray(List<T> list) {
+		T[] array = null;
+		
+		if (list != null) {
+			int size = list.size();
+			array = (T[]) new Array[size];
+			for (int i = 0; i < size; i++) {
+				array[i] = list.get(i);
+			}
+		}
+		
+		return array;
 	}
 
 }

@@ -3,6 +3,7 @@ package io.github.marcperez06.java_utilities.reflection;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -604,7 +605,7 @@ public class ReflectionUtils {
 	
 	@SuppressWarnings("rawtypes")
 	public static List<Field> getAllFieldsInClass(Class clazz) {
-		ArrayList<Field> fields = new ArrayList<Field>();
+		List<Field> fields = new ArrayList<Field>();
 		
 		try {
 			
@@ -1031,6 +1032,72 @@ public class ReflectionUtils {
 			}
 
 		}
+	}
+	
+	// ******************** GET METHODS ***********************************
+	public static <T> Method getMethod(T object, String name, Class<?>...parameterTypes) {
+		Method method = null;
+		if (object != null) {
+			Class<?> clazz = object.getClass();
+			method = getMethod(clazz, name, parameterTypes);
+		}
+		return method;
+	}
+	
+	public static <T> Method getMethod(Class<T> clazz, String name, Class<?>...parameterTypes) {
+		Method method = null;
+		try {
+			method = clazz.getDeclaredMethod(name, parameterTypes);
+			method.setAccessible(true);
+		} catch (Exception e) {
+			method = null;
+			e.printStackTrace();
+		}
+		return method;
+	}
+	
+	public static <T> List<Method> getAllMethods(T object) {
+		List<Method> methods = new ArrayList<Method>();
+		if (object != null) {
+			Class<?> clazz = object.getClass();
+			methods = getAllMethods(clazz);
+		}
+		return methods;
+	}
+	
+	public static <T> List<Method> getAllMethods(Class<T> clazz) {
+		List<Method> methods = new ArrayList<Method>();
+		
+		try {
+			
+			Class parentClass = clazz.getSuperclass();
+
+			while (parentClass != null && !parentClass.getName().equals("java.lang.Object")) {
+				methods.addAll(getMethodsOfClass(parentClass));
+				parentClass = parentClass.getSuperclass();
+			}
+			
+			methods.addAll(getMethodsOfClass(clazz));
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return methods;	
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public static List<Method> getMethodsOfClass(Class clazz) {
+		List<Method> methods = new ArrayList<Method>();
+		
+		try {
+			Method[] classMethods = clazz.getDeclaredMethods();
+			methods.addAll(Arrays.asList(classMethods));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return methods;
 	}
 
 }
