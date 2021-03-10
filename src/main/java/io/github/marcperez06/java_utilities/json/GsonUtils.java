@@ -15,7 +15,7 @@ public class GsonUtils {
 	
 	private GsonUtils() {}
 	
-	private static synchronized Gson createGson(String type, String dateFormat) {
+	private static Gson createGson(String type, String dateFormat) {
 		Gson gson = null;
 		
 		if (type.equals(ESCAPING_HTML)) {
@@ -45,7 +45,7 @@ public class GsonUtils {
 	 * @param type - Class of type that be returned
 	 * @return Object of type specified with all properties filled if exist in json - T
 	 */
-	public static synchronized <T> T returnJsonbject(String json, Class<T> type) {
+	public static <T> T returnJsonbject(String json, Class<T> type) {
 		return returnJsonObject(json, type, null);
 	}
 	
@@ -58,7 +58,7 @@ public class GsonUtils {
 	 * @param dateFormat - String date format
 	 * @return Object of type specified with all properties filled if exist in json - T
 	 */
-	public static synchronized <T> T returnJsonObject(String json, Class<T> type, String dateFormat) {
+	public static <T> T returnJsonObject(String json, Class<T> type, String dateFormat) {
 		T jsonObject = null;
 		try {
 			Gson gson = createGson(ESCAPING_HTML, dateFormat);
@@ -77,7 +77,7 @@ public class GsonUtils {
 	 * @param type - Class of object inside list you wish return
 	 * @return Object List of class specified - List&lt;T&gt;
 	 */
-	public static synchronized <T> List<T> returnJsonObjectList(String json, Class<T> type) {
+	public static <T> List<T> returnJsonObjectList(String json, Class<T> type) {
 		return returnJsonObjectList(json, type, null);
 	}
 	
@@ -91,7 +91,7 @@ public class GsonUtils {
 	 * @return Object List of class specified - List&lt;T&gt;
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static synchronized <T> List<T> returnJsonObjectList(String json, Class<T> type, String dateFormat) {
+	public static <T> List<T> returnJsonObjectList(String json, Class<T> type, String dateFormat) {
 		List<T> jsonObjectList = new ArrayList<T>();
 		
 		try {
@@ -128,7 +128,7 @@ public class GsonUtils {
 	 * @param type - Class of type that be returned
 	 * @return Object of type specified with all properties filled if exist in json - T
 	 */
-	public static synchronized <T> T returnJsonObjectWithoutEscapingHtml(String json, Class<T> type) {
+	public static <T> T returnJsonObjectWithoutEscapingHtml(String json, Class<T> type) {
 		return returnJsonObjectWithoutEscapingHtml(json, type, null);
 	}
 	
@@ -141,7 +141,7 @@ public class GsonUtils {
 	 * @param dateFormat - String date format
 	 * @return Object of type specified with all properties filled if exist in json - T
 	 */
-	public static synchronized <T> T returnJsonObjectWithoutEscapingHtml(String json, Class<T> type, String dateFormat) {
+	public static <T> T returnJsonObjectWithoutEscapingHtml(String json, Class<T> type, String dateFormat) {
 		T jsonObject = null;
 		try {
 			Gson gson = createGson(NOT_ESCAPING_HTML, dateFormat);
@@ -160,7 +160,7 @@ public class GsonUtils {
 	 * @param type - Class of object inside list you wish return
 	 * @return Object List of class specified - List&lt;T&gt;
 	 */
-	public static synchronized <T> List<T> returnJsonObjectListWithoutEscapingHtml(String json, Class<T> type) {
+	public static <T> List<T> returnJsonObjectListWithoutEscapingHtml(String json, Class<T> type) {
 		return returnJsonObjectList(json, type, null);
 	}
 	
@@ -174,7 +174,7 @@ public class GsonUtils {
 	 * @return Object List of class specified - List&lt;T&gt;
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static synchronized <T> List<T> returnJsonObjectListWithoutEscapingHtml(String json, Class<T> type, 
+	public static <T> List<T> returnJsonObjectListWithoutEscapingHtml(String json, Class<T> type, 
 																								String dateFormat) {
 		
 		List<T> jsonObjectList = new ArrayList<T>();
@@ -211,7 +211,7 @@ public class GsonUtils {
 	 * @param obj - Object of generic type
 	 * @return The object in JSON format with all properties - String (Example: { name : "example", id : 1 })
 	 */
-	public static synchronized <T> String getJSON(T obj) {
+	public static <T> String getJSON(T obj) {
 		return getJSON(obj, null);
 	}
 	
@@ -222,7 +222,7 @@ public class GsonUtils {
 	 * @param dateFormat - String date format
 	 * @return The object in JSON format with all properties - String (Example: { name : "example", id : 1 }) 
 	 */
-	public static synchronized <T> String getJSON(T obj, String dateFormat) {
+	public static <T> String getJSON(T obj, String dateFormat) {
 		String json = "";
 		try {
 			boolean isInstanceOfString = (obj instanceof String);

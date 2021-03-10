@@ -90,6 +90,31 @@ public class FileUtils {
 		return new BufferedReader(new FileReader(path));
 	}
 	
+	private static BufferedWriter createWriter(String path) throws IOException {
+		BufferedWriter bufferedWriter = null;
+		File file = new File(path);
+		
+		if (file != null) {
+			file.setWritable(true);
+			FileWriter fileWriter = new FileWriter(file);
+			bufferedWriter = new BufferedWriter(fileWriter);
+		}
+		
+		return bufferedWriter;
+	}
+	
+	private static BufferedWriter createWriterWithEncoding(String path, String encoding) throws IOException {
+		BufferedWriter bufferedWriter = null;
+		FileOutputStream fileOutputStream = new FileOutputStream(path);
+		
+		if (fileOutputStream != null) {
+			OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, encoding);
+			bufferedWriter = new BufferedWriter(outputStreamWriter);
+		}
+		
+		return bufferedWriter;
+	}
+	
 	// --- LECTURAS SIMPLES ---
 	
 	public static String getStringOfFile(String path) {
@@ -255,74 +280,94 @@ public class FileUtils {
 		return listOfPaths;
 	}
 	
-	// --- ESCRITURA DE LOS RESULTADOS ---
+	// --- ESCRITURA EN FICHERO ---
 	
-	public static boolean writeTxt(String txt, String path) {
-		boolean write = false;
-		BufferedWriter bw = null;
-		FileWriter fw = null;
-
-		try {
-			File file = createFileIfNotExist(path);
-			if (file != null) {
-				fw = new FileWriter(file);
-				bw = new BufferedWriter(fw);
-				
-				bw.write(txt);
+	public static boolean addLineInFile(String line, String path) {
+		boolean addLine = false;
+		
+		if (!existFile(path)) {
+			writeTxt(line, path);
+		} else {
 			
-				write = true;
-			}
-	
-		} catch (IOException e) {
-			e.printStackTrace();
-			write = false;
-		} finally {
-			try {
-				if (bw != null) { bw.close(); }
-				if (fw != null) { fw.close(); }
-			} catch (IOException ex) {
-				ex.printStackTrace();
+			try (BufferedWriter bufferedWritter = createWriter(path)){
+				
+				bufferedWritter.append(line);
+				addLine = true;
+
+			} catch (Exception e) {
+				e.printStackTrace();
+				addLine = false;
 			}
 		}
 		
+		return addLine;
+	}
+	
+	public static boolean addLineInFileWithEncoding(String line, String path, String encoding) {
+		boolean addLine = false;
+
+		if (!existFile(path)) {
+			writeTxtWithEncoding(line, path, encoding);
+		} else {
+			
+			try (BufferedWriter bufferedWriter = createWriterWithEncoding(path, encoding)) {
+				
+				bufferedWriter.append(line);
+				addLine = true;
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+				addLine = false;
+			}
+		}
+		
+		return addLine;
+	}
+	
+	public static boolean writeTxt(String txt, String path) {
+		boolean write = false;
+
+		File file = createFileIfNotExist(path);
+		
+		if (file != null) {
+			
+			try (BufferedWriter bufferedWritter = createWriter(path)){
+				
+				bufferedWritter.write(txt);;
+				write = true;
+
+			} catch (Exception e) {
+				e.printStackTrace();
+				write = false;
+			}
+			
+		}
+
 		return write;
 	}
 	
 	public static boolean writeTxtWithEncoding(String txt, String path, String encoding) {
 		boolean write = false;
-		BufferedWriter bw = null;
-		FileOutputStream fileOutputStream = null;
-		OutputStreamWriter outputStreamWriter = null;
 		
-		try {
-			File file = createFileIfNotExist(path);
-			if (file != null) {
-				fileOutputStream = new FileOutputStream(path);
-				outputStreamWriter = new OutputStreamWriter(fileOutputStream, encoding);
-				bw = new BufferedWriter(outputStreamWriter);
-				
-				bw.write(txt);
+		File file = createFileIfNotExist(path);
+		
+		if (file != null) {
 			
+			try (BufferedWriter bufferedWritter = createWriterWithEncoding(path, encoding)) {
+				
+				bufferedWritter.write(txt);
 				write = true;
+		
+			} catch (IOException e) {
+				e.printStackTrace();
+				write = false;
 			}
-	
-		} catch (IOException e) {
-			e.printStackTrace();
-			write = false;
-		} finally {
-			try {
-				if (bw != null) { bw.close(); }
-				if (outputStreamWriter != null) { outputStreamWriter.close(); }
-				if (fileOutputStream != null) { fileOutputStream.close(); }
-			} catch (IOException ex) {
-				ex.printStackTrace();
-			}
+			
 		}
-		
+
 		return write;
-		
 	}
-	
+
 	// ---- ELIMINAR FICHEROS I / O DIRECTORIOS ----
 	
 	public static boolean deleteFile(String path) {
