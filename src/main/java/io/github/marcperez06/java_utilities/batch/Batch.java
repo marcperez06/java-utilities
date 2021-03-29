@@ -2,7 +2,6 @@ package io.github.marcperez06.java_utilities.batch;
 
 import java.io.File;
 import java.util.Arrays;
-import java.util.List;
 
 import io.github.marcperez06.java_utilities.logger.Logger;
 
@@ -49,7 +48,7 @@ public class Batch {
 				
 				this.waitMode = true;
 				String command = pathOfBat + batArguments;
-				this.executeWindowsCommand(command, visualMode);
+				this.executeWindowsCommandInCmd(command, visualMode);
 			}
 
 	    } catch (Exception e) { 
@@ -65,17 +64,15 @@ public class Batch {
 		return clearedArguments;
 	}
 	
-	public void executeWindowsCommand(String command) {
-		this.executeWindowsCommand(command, false);
+	public void executeWindowsCommandInCmd(String command) {
+		this.executeWindowsCommandInCmd(command, false);
 	}
 	
-	public void executeWindowsCommand(String command, boolean visualMode) {
+	public void executeWindowsCommandInCmd(String command, boolean visualMode) {
 		this.currentApplication = Runtime.getRuntime(); 
-		
-		Logger.println("Command to execute --> " + command);
-        String commandToExecute = this.constructCommandToExecute(command, visualMode);
 
-        System.out.println(commandToExecute);
+        String commandToExecute = this.constructCommandToExecuteInCmd(command, visualMode);
+        Logger.println("Command to execute --> " + commandToExecute);
         
         try {
         	Logger.println("Starting cmd command");
@@ -88,7 +85,7 @@ public class Batch {
 
 	}
 	
-	private String constructCommandToExecute(String command, boolean visualMode) {
+	private String constructCommandToExecuteInCmd(String command, boolean visualMode) {
 		String commandToExecute = "";
 		if (visualMode == true) {
 			commandToExecute = WINDOWS_SHELL + " " + C_PARAMETER;
@@ -97,6 +94,21 @@ public class Batch {
 		}
         commandToExecute += (visualMode) ? " " + command : command;
         return commandToExecute;
+	}
+	
+	public void executeCommand(String command) {
+		this.currentApplication = Runtime.getRuntime(); 
+		Logger.println("Command to execute --> " + command);
+
+        try {
+        	Logger.println("Starting command");
+        	this.currentProcess = Runtime.getRuntime().exec(command);
+        	Logger.println("Finishing command");
+        	
+        } catch(Exception e) {
+        	e.printStackTrace();
+        }
+
 	}
 	
 	public void waitUntilCurrentProcessIsFinished() {
