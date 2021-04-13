@@ -1099,5 +1099,74 @@ public class ReflectionUtils {
 		
 		return methods;
 	}
+	
+	public static <T> void printObjectProperties(T object) {
+		
+		if (object != null) {
+			
+			try {
+				
+				Class<T> clazz = (Class<T>) object.getClass();
+				String className = clazz.getCanonicalName();
+				
+				if (!clazz.isPrimitive() && !clazz.getName().equals("java.lang.Object")) {
+					
+					System.out.println("-------------------------------------------------------------------------");
+					System.out.println("Class Name: " + className);
+					System.out.println("Class Package: " + clazz.getPackage().getName());
+					System.out.println("------------------------- " + className + " Properties ----------------------------");
+					
+					List<Field> fields = getAllFieldsInClass(clazz);
+					
+					for (Field field : fields) {
+						
+						if (field != null) {
+							field.setAccessible(true);
+							String fieldName = field.getName();
+							Class<?> fieldClass = getGenericTypeOfField(field);
+							Package packageObj = fieldClass.getPackage();
+							String packageName = (packageObj != null) ? packageObj.getName() : "None";
+							Object fieldValue = field.get(object);
+							
+							if (fieldValue != null) {
+								System.out.println("-------------------------------------------------------------------------");
+								System.out.println("Field Name: " + fieldName);
+								System.out.println("Field Class: " + fieldClass.getCanonicalName());
+								System.out.println("Field Class Package: " + packageName);
+								
+								if (String.class.isInstance(fieldValue)
+										|| Number.class.isInstance(fieldValue)
+										|| Map.class.isInstance(fieldValue)
+										|| fieldClass.isArray()) {
+
+									System.out.println("Field Value: " + String.valueOf(fieldValue));
+								} else if (!clazz.isPrimitive()){
+									printObjectProperties(fieldValue);
+								}
+								
+								System.out.println("-------------------------------------------------------------------------");
+							}
+							
+						}
+						
+					}
+					
+				} else {
+					System.out.println("-------------------------------------------------------------------------");
+					System.out.println("Is a primitive class --> " + className);
+					System.out.println("-------------------------------------------------------------------------");
+				}
+
+				System.out.println("-------------------------------------------------------------------------");
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+		} else {
+			System.out.println("Object you want info is NULL");
+		}
+
+	}
 
 }
