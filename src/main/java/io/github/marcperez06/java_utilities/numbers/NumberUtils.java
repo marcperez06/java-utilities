@@ -1,5 +1,8 @@
 package io.github.marcperez06.java_utilities.numbers;
 
+import java.text.NumberFormat;
+import java.util.Locale;
+
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
@@ -19,7 +22,7 @@ public class NumberUtils {
 		if (number != null && !number.isEmpty()) {
 			String[] numberParts = number.split("\\,");
 			if (numberParts != null && numberParts.length > 1) {
-				americanNumber = numberParts[0].replaceAll("\\.", "\\,") + "." + numberParts[1];	
+				americanNumber = numberParts[0].replaceAll("\\.", "") + "." + numberParts[1];	
 			} else {
 				americanNumber = numberParts[0];
 			}
@@ -39,7 +42,7 @@ public class NumberUtils {
 		if (number != null && !number.isEmpty()) {
 			String[] numberParts = number.split("\\.");
 			if (numberParts != null && numberParts.length > 1) {
-				europeanNumber = numberParts[0].replaceAll("\\,", "\\.") + "," + numberParts[1];	
+				europeanNumber = numberParts[0].replaceAll("\\,", "") + "," + numberParts[1];	
 			} else {
 				europeanNumber = numberParts[0];
 			}
@@ -92,6 +95,52 @@ public class NumberUtils {
 								.replaceAll("exp", "Math.exp");
 		
 		return expression;
+	}
+	
+	/**
+	 * Format number to european format with 2 decimals
+	 * @param number - double
+	 * @return String - number formatted
+	 */
+	public static String toEuropeanFormat(double number) {
+		return toEuropeanFormat(number, 2);
+	}
+
+	/**
+	 * Format number to european format with decimals specified
+	 * @param number - double
+	 * @param decimals - int decimals wished
+	 * @return String - number formatted
+	 */
+	public static String toEuropeanFormat(double number, int decimals) {
+		NumberFormat formatter = NumberFormat.getInstance(Locale.ITALIAN);
+		formatter.setMinimumFractionDigits(decimals);
+		formatter.setMaximumFractionDigits(decimals);
+		String numberFormatted = formatter.format(number);
+		return numberFormatted;
+	}
+	
+	/**
+	 * Format number to american format with 2 decimals
+	 * @param number - double
+	 * @return String - number formatted
+	 */
+	public static String toAmericanFormat(double number) {
+		return toAmericanFormat(number, 2);
+	}
+
+	/**
+	 * Format number to american format with decimals specified
+	 * @param number - double
+	 * @param decimals - int decimals wished
+	 * @return String - number formatted
+	 */
+	public static String toAmericanFormat(double number, int decimals) {
+		NumberFormat formatter = NumberFormat.getInstance(Locale.US);
+		formatter.setMinimumFractionDigits(decimals);
+		formatter.setMaximumFractionDigits(decimals);
+		String numberFormatted = formatter.format(number);
+		return numberFormatted;
 	}
 
 }
