@@ -20,7 +20,7 @@ public class DAO {
 	private String user;
 	private String password;
 	
-	protected DB db;
+	protected Database db;
 
 	public DAO() {
 		this.db = null;
@@ -56,7 +56,7 @@ public class DAO {
 	 */
 	public void createDatabaseConnection() {
 		try {
-			this.db = new DB(this.url, this.user, this.password);
+			this.db = new Database(this.url, this.user, this.password);
 			
 			if (this.db.getConnection() == null) {
 				this.db = null;
@@ -205,7 +205,7 @@ public class DAO {
 			
 			this.select(sqlObject);
 			ResultSet resultSet = this.db.getResultSet();
-			data = DBUtils.getListFromResultSet(resultSet, returnClass);
+			data = DatabaseUtils.getListFromResultSet(resultSet, returnClass);
 			//this.db.close();
 		}
 		
@@ -228,7 +228,7 @@ public class DAO {
 				this.select(sqlObject);
 				
 				ResultSet rs = this.db.getResultSet();
-				DBUtils.fillFromResultSet(rs, classToReturn);
+				DatabaseUtils.fillFromResultSet(rs, classToReturn);
 				//this.db.close();
 			}
 			

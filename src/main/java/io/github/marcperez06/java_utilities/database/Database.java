@@ -7,7 +7,6 @@ package io.github.marcperez06.java_utilities.database;
 
 import java.sql.Connection;
 import java.sql.Date;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,56 +14,65 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.List;
 
-public class DB {
+public abstract class Database {
 	
 	private String url;
 	private String user;
 	private String password;
 
-	private Connection connection;
-	private Statement statement;
-	private PreparedStatement preparedStatement;
-	private ResultSet resultSet;
+	protected Connection connection;
+	protected Statement statement;
+	protected PreparedStatement preparedStatement;
+	protected ResultSet resultSet;
 	
-	public DB() {
+	public Database() {
+		this.url = null;
+		this.user = null;
+		this.password = null;
 		this.connection = null;
 		this.statement = null;
 		this.preparedStatement = null;
 		this.resultSet = null;
 	}
 	
-	public DB(String url, String user, String password) {
-		try {
-			this.url = url;
-			this.user = user;
-			this.password = password;
-			this.createConnection(url, user, password);
-		} catch (Exception e) {
-			this.connection = null;
-			e.printStackTrace();
-		}
+	public Database(String url, String user, String password) {
+		this();
+		this.url = url;
+		this.user = user;
+		this.password = password;
 	}
 
 	@Override
 	protected void finalize() {
 		this.close();
 	}
-
-	public void createConnection(String url, String user, String password) 
-									throws SQLException, IllegalAccessException, ClassNotFoundException, Exception {
-		
-		if (this.connection == null || this.connection.isClosed() == true) {
-			
-			try {
-				DriverManager.registerDriver(new com.mysql.jdbc.Driver());
-				this.connection = DriverManager.getConnection(url, user, password);
-			} catch (SQLException e) {
-				e.printStackTrace();
-				this.connection = null;
-			}
-		
-		}
+	
+	public String getUrl() {
+		return this.user;
 	}
+	
+	public void setUrl(String url) {
+		this.url = url;
+	}
+	
+	public String getUser() {
+		return this.user;
+	}
+	
+	public void setUser(String user) {
+		this.user = user;
+	}
+	
+	public String getPassword() {
+		return this.password;
+	}
+	
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public abstract void createConnection(String url, String user, String password) 
+									throws SQLException, IllegalAccessException, ClassNotFoundException, Exception;
 	
 	public Connection getConnection() {
 		return this.connection;

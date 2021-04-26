@@ -7,16 +7,16 @@ package io.github.marcperez06.java_utilities.database;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-public class DBUtils {
+import io.github.marcperez06.java_utilities.reflection.ReflectionUtils;
+
+public class DatabaseUtils {
 	
 	public static <T> List<T> getListFromResultSet(ResultSet resultSet, Class<T> genericClass) {
 		List<T> listFilled = new ArrayList<T>();
@@ -34,19 +34,7 @@ public class DBUtils {
 				}
 				
 			}
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
-		} catch (SecurityException e) {
+		} catch (Throwable e) {
 			e.printStackTrace();
 		}
 
@@ -57,9 +45,9 @@ public class DBUtils {
 		boolean filled = true;
 		
 		try {
-			Class c = Class.forName(obj.getClass().getName());
+			Class<?> clazz = Class.forName(obj.getClass().getName());
 			
-			List<Field> fields = getAllFieldsInClass(c);
+			List<Field> fields = ReflectionUtils.getAllFieldsInClass(clazz);
 			
 			if(rs != null && rs.next() == true) {
 			
@@ -81,29 +69,6 @@ public class DBUtils {
 		}
 
 		return filled;
-	}
-	
-	private static List<Field> getAllFieldsInClass(Class c) {
-		ArrayList<Field> fields = new ArrayList<Field>();
-		
-		try {
-			
-			Class parentClass = c.getSuperclass();
-			
-			while (parentClass != null && parentClass.getName().equals("java.lang.Object") == false) {
-				Field[] parentFields = parentClass.getDeclaredFields();
-				fields.addAll(Arrays.asList(parentFields));
-				parentClass = parentClass.getSuperclass();
-			}
-			
-			Field[] classFields = c.getDeclaredFields();
-			fields.addAll(Arrays.asList(classFields));
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return fields;
 	}
 	
 	private static <T> void setFieldValueFromResultSet(T obj, Field field, ResultSet rs) {
@@ -164,11 +129,13 @@ public class DBUtils {
 			String message = e.getMessage();
 			if (message.contains("not found") == false || message.contains("Column") == false) {
 				e.printStackTrace();
+			} else {
+				System.out.println("Column: " + name + " not found");
 			}
 		}
 	}
 	
-	public static Timestamp getCurrentTimeStamp() {
+	public static Timestamp getCurrentTimestamp() {
 		Date today = new java.util.Date();
 		return new Timestamp(today.getTime());
 	}
