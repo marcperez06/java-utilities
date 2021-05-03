@@ -1,5 +1,8 @@
 package io.github.marcperez06.java_utilities.collection.array;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.github.marcperez06.java_utilities.validation.ValidationUtils;
 
 public class ArrayUtils {
@@ -27,6 +30,18 @@ public class ArrayUtils {
 		return exist;
 	}
 	
-	
+	public static <T> List<T> toList(T[] array) {
+		List<T> list = null;
+		
+		if (array != null) {
+			int size = array.length;
+			list = new ArrayList<T>();
+			for (int i = 0; i < size; i++) {
+				list.add(array[i]);
+			}
+		}
+
+		return list;
+	}	
 	
 }

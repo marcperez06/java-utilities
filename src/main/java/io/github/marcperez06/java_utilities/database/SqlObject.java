@@ -9,6 +9,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.github.marcperez06.java_utilities.collection.array.ArrayUtils;
 import io.github.marcperez06.java_utilities.strings.StringUtils;
 
 public class SqlObject {
@@ -43,6 +44,10 @@ public class SqlObject {
 		this.fields = fields;
 	}
 	
+	public void setFields(String[] fields) {
+		this.fields = (List<String>) ArrayUtils.toList(fields);
+	}
+	
 	public String getConcatFields() {
 		return StringUtils.concatListOfString(this.fields, ",");
 	}
@@ -61,6 +66,10 @@ public class SqlObject {
 	
 	public void setWhereFields(List<String> whereFields) {
 		this.whereFields = whereFields;
+	}
+	
+	public void setWhereFields(String[] whereFields) {
+		this.whereFields = (List<String>) ArrayUtils.toList(whereFields);
 	}
 	
 	public List<Object> getWhereParameters() {
