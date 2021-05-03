@@ -45,7 +45,7 @@ public class GsonUtils {
 	 * @param type - Class of type that be returned
 	 * @return Object of type specified with all properties filled if exist in json - T
 	 */
-	public static <T> T returnJsonbject(String json, Class<T> type) {
+	public static <T> T returnJsonObject(String json, Class<T> type) {
 		return returnJsonObject(json, type, null);
 	}
 	
