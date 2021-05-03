@@ -26,9 +26,8 @@ public class SqlDatabase extends Database {
 	 * @param user - String database user
 	 * @param password - String database password
 	 */
-	public SqlDatabase(String database, String url, String user, String password) {
-		super(url, user, password);
-		this.database = database;
+	public SqlDatabase(String url, String database, String user, String password) {
+		this.init(url, database, user, password);
 		this.connectionSettings = null;
 	}
 	
@@ -40,7 +39,7 @@ public class SqlDatabase extends Database {
 	public SqlDatabase(Map<String, String> connectionSettings) {
 		if (this.connectionSettings.containsKey("database") && this.connectionSettings.containsKey("url")
 				&& this.connectionSettings.containsKey("user") && this.connectionSettings.containsKey("password")) {
-			this.init(this.connectionSettings.get("database"), this.connectionSettings.get("url"), 
+			this.init(this.connectionSettings.get("url"), this.connectionSettings.get("database"), 
 						this.connectionSettings.get("user"), this.connectionSettings.get("password"));
 		} else {
 			this.init(null, null, null, null);
@@ -67,6 +66,7 @@ public class SqlDatabase extends Database {
 		if (super.connection == null || super.connection.isClosed() == true) {
 
 			try {
+				DriverManager.registerDriver(new com.microsoft.sqlserver.jdbc.SQLServerDriver());
 				String stringConnection = this.getConnection(url, user, password);
 				super.connection = DriverManager.getConnection(stringConnection);
 			} catch (SQLException e) {

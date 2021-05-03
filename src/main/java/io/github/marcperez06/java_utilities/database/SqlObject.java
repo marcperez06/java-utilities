@@ -14,16 +14,16 @@ import io.github.marcperez06.java_utilities.strings.StringUtils;
 public class SqlObject {
 	
 	private String tableName;
-	private String[] fields;
+	private List<String> fields;
 	private List<Object> parameters;
-	private String[] whereFields;
+	private List<String> whereFields;
 	private List<Object> whereParameters;
 	
 	public SqlObject() {
 		this.tableName = "";
-		this.fields = null;
+		this.fields = new ArrayList<String>();
 		this.parameters = new ArrayList<Object>();
-		this.whereFields = null;
+		this.whereFields = new ArrayList<String>();
 		this.whereParameters = new ArrayList<Object>();
 	}
 	
@@ -35,16 +35,16 @@ public class SqlObject {
 		this.tableName = tableName;
 	}
 	
-	public String[] getFields() {
+	public List<String> getFields() {
 		return this.fields;
 	}
 	
-	public void setFields(String[] fields) {
+	public void setFields(List<String> fields) {
 		this.fields = fields;
 	}
 	
 	public String getConcatFields() {
-		return StringUtils.concatArrayOfString(this.fields, ",");
+		return StringUtils.concatListOfString(this.fields, ",");
 	}
 	
 	public List<Object> getParameters() {
@@ -55,11 +55,11 @@ public class SqlObject {
 		this.parameters = parameters;
 	}
 	
-	public String[] getWhereFields() {
+	public List<String> getWhereFields() {
 		return this.whereFields;
 	}
 	
-	public void setWhereFields(String[] whereFields) {
+	public void setWhereFields(List<String> whereFields) {
 		this.whereFields = whereFields;
 	}
 	
@@ -72,7 +72,7 @@ public class SqlObject {
 	}
 	
 	public int getFieldsSize() {
-		return (this.fields != null) ? this.fields.length : 0;
+		return (this.fields != null) ? this.fields.size() : 0;
 	}
 	
 	public boolean haveFields() {
@@ -80,7 +80,7 @@ public class SqlObject {
 	}
 	
 	public int getWhereFieldsSize() {
-		return (this.whereFields != null) ? this.whereFields.length : 0;
+		return (this.whereFields != null) ? this.whereFields.size() : 0;
 	}
 	
 	public boolean haveWhereFields() {
@@ -113,7 +113,7 @@ public class SqlObject {
 	public String getField(int index) {
 		String field = "";
 		if (index > -1 && index < this.getFieldsSize()) {
-			field = this.fields[index];
+			field = this.fields.get(index);
 		}
 		return field;
 	}
@@ -121,7 +121,7 @@ public class SqlObject {
 	public String getWhereField(int index) {
 		String whereField = "";
 		if (index > -1 && index < this.getWhereFieldsSize()) {
-			whereField = this.whereFields[index];
+			whereField = this.whereFields.get(index);
 		}
 		return whereField;
 	}
@@ -145,7 +145,7 @@ public class SqlObject {
 	public <T> void addAllParameter(T obj) {
 		try {
 			
-			Class clazz = Class.forName(obj.getClass().getName());
+			Class<?> clazz = Class.forName(obj.getClass().getName());
 			List<Field> fields = this.getFieldsOfDBInClass(clazz);
 			
 			for (Field field : fields) {
@@ -158,12 +158,12 @@ public class SqlObject {
 		}
 	}
 	
-	private List<Field> getFieldsOfDBInClass(Class c) {
+	private List<Field> getFieldsOfDBInClass(Class<?> clazz) {
 		ArrayList<Field> fields = new ArrayList<Field>();
 		
 		try {
 			
-			Class parentClass = c.getSuperclass();
+			Class<?> parentClass = clazz.getSuperclass();
 			
 			while (parentClass != null && parentClass.getName().equals("java.lang.Object") == false) {
 				Field[] parentFields = parentClass.getDeclaredFields();
@@ -171,7 +171,7 @@ public class SqlObject {
 				parentClass = parentClass.getSuperclass();
 			}
 			
-			Field[] classFields = c.getDeclaredFields();
+			Field[] classFields = clazz.getDeclaredFields();
 			fields.addAll(this.returnExistingFields(classFields));
 
 		} catch (Exception e) {
@@ -188,18 +188,17 @@ public class SqlObject {
 			
 			boolean exist = false;
 			
-			for (int i = 0; i < this.fields.length && exist == false; i++) {
+			for (int i = 0; i < this.getFieldsSize() && exist == false; i++) {
 				
 				String fieldName = field.getName();
-				String fieldInDB = this.fields[i];
+				String fieldInDB = this.fields.get(i);
 				
 				if (fieldName.equals(fieldInDB) == true) {
 					existingFields.add(field);
 					exist = true;
 				}
 			}
-			
-			
+
 		}
 		
 		return existingFields;

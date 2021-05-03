@@ -1,8 +1,3 @@
-/**
- * Classe base para todos los DAO.
- * @author Marc Perez Rodriguez
- */
-
 package io.github.marcperez06.java_utilities.database;
 
 import java.lang.reflect.Constructor;
@@ -12,21 +7,22 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.marcperez06.java_utilities.strings.StringUtils;
+import io.github.marcperez06.java_utilities.database.interfaces.IDAO;
+import io.github.marcperez06.java_utilities.database.utils.DatabaseUtils;
 
-public class DAO {
-	
-	private String url;
-	private String user;
-	private String password;
+public abstract class BaseDAO implements IDAO {
+
+	protected String url;
+	protected String user;
+	protected String password;
 	
 	protected Database db;
-
-	public DAO() {
+	
+	public BaseDAO() {
 		this.db = null;
 	}
 	
-	public DAO(String url, String user, String password) {
+	public BaseDAO(String url, String user, String password) {
 		this.createDatabaseConnection(url, user, password);
 	}
 	
@@ -39,12 +35,17 @@ public class DAO {
 		this.password = password;
 	}
 	
+	protected boolean haveAccessToDB() {
+		return (this.db != null);
+	}
+	
 	/**
 	 * Create a connection to database using the url, user and password parameters
 	 * @param url - String
 	 * @param user - String
 	 * @param password - String
 	 */
+	@Override
 	public void createDatabaseConnection(String url, String user, String password) {
 		this.setUrl(url);
 		this.setCredentials(user, password);
@@ -54,9 +55,10 @@ public class DAO {
 	/**
 	 * Create a connection to database using the url, user and password properties.
 	 */
+	@Override
 	public void createDatabaseConnection() {
 		try {
-			this.db = new Database(this.url, this.user, this.password);
+			this.db = this.createDatabaseObject();
 			
 			if (this.db.getConnection() == null) {
 				this.db = null;
@@ -67,11 +69,10 @@ public class DAO {
 		}
 	}
 	
-	protected boolean haveAccessToDB() {
-		return (this.db != null);
-	}
-	
-	protected int insert(SqlObject sqlObject) {
+	protected abstract Database createDatabaseObject();
+
+	@Override
+	public int insert(SqlObject sqlObject) {
 		int result = -1;
 		if (this.haveAccessToDB() == true) {
 			result = this.insertInDB(sqlObject);
@@ -79,28 +80,10 @@ public class DAO {
 		return result;
 	}
 	
-	private int insertInDB(SqlObject sqlObject) {
-		StringBuilder sqlBuilder = new StringBuilder();
-		sqlBuilder.append("INSERT INTO " + sqlObject.getTableName());
-		sqlBuilder.append("(" + StringUtils.concatArrayOfString(sqlObject.getFields(), ", ") + ") VALUES");
-		sqlBuilder.append("(");
-
-		for (int i = 0; i < sqlObject.getFieldsSize(); i++) {
-			sqlBuilder.append("?, ");
-		}
-		
-		String sql = sqlBuilder.toString();
-		sql = StringUtils.cutStringWithOtherString(sql, ", ", 0);
-		sql += ");";
-
-		int insert = this.db.executePreparedSQL(sql, sqlObject.getParameters());
-		
-		System.out.println("------------ DAO.java ------------ SQL INSERT: " + sql);
-		
-		return insert;
-	}
+	protected abstract int insertInDB(SqlObject sqlObject);
 	
-	protected int update(SqlObject sqlObject) {
+	@Override
+	public int update(SqlObject sqlObject) {
 		int result = -1;
 		if (this.haveAccessToDB() == true) {
 			result = this.updateInDB(sqlObject);
@@ -108,35 +91,13 @@ public class DAO {
 		return result;
 	}
 	
-	private int updateInDB(SqlObject sqlObject) {
-		String sql = "UPDATE " + sqlObject.getTableName();
-		sql += " SET ";
-
-		for (int i = 0; i < sqlObject.getFieldsSize(); i++) {
-			sql += sqlObject.getField(i) + " = ?, ";
-		}
-
-		sql = StringUtils.cutStringWithOtherString(sql, ", ", 0);
-		sql += " WHERE 1 = 1";
-
-		for (int i = 0; i < sqlObject.getWhereFieldsSize(); i++) {
-			sql += " AND " + sqlObject.getWhereField(i) + " = ?";
-		}
-		
-		sql += ";";
-		
-		System.out.println("------------ DAO.java ------------ SQL UPDATE: " + sql);
-
-		int update = this.db.executePreparedSQL(sql, sqlObject.getJoinedParameters());
-		
-		return update;
-	}
+	protected abstract int updateInDB(SqlObject sqlObject);
 	
 	private <T> Method getWhereConditionMethodOfPK(T pk) {
 		Method method = null;
 		if (pk != null) {
 			try {
-				Class clazz = pk.getClass();
+				Class<?> clazz = pk.getClass();
 				method = clazz.getMethod("getWhereCondition");
 			} catch (NoSuchMethodException e) {
 				method = null;
@@ -172,35 +133,21 @@ public class DAO {
 		return delete;
 	}
 	
-	protected int delete(SqlObject sqlObject) {
+	@Override
+	public int delete(SqlObject sqlObject) {
 		int result = -1;
-		if (this.haveAccessToDB() == true) {
+		if (this.haveAccessToDB()) {
 			result = this.deleteInDB(sqlObject);
 		}
 		return result;
 	}
 	
-	private int deleteInDB(SqlObject sqlObject) {
-		String sql = "DELETE " + sqlObject.getTableName();
-		sql += " WHERE 1 = 1";
-
-		for (int i = 0; i < sqlObject.getWhereFieldsSize(); i++) {
-			sql += " AND " + sqlObject.getWhereField(i) + " = ?";
-		}
-		
-		sql += ";";
-		
-		System.out.println("------------ DAO.java ------------ SQL DELETE: " + sql);
-
-		int delete = this.db.executePreparedSQL(sql, sqlObject.getWhereParameters());
-		
-		return delete;
-	}
+	protected abstract int deleteInDB(SqlObject sqlObject);
 	
 	protected <T> List<T> returnListOfData(SqlObject sqlObject, Class<T> returnClass) {
 		List<T> data = new ArrayList<T>();
 		
-		if (this.haveAccessToDB() == true) {
+		if (this.haveAccessToDB()) {
 			//this.db.openConnection();
 			
 			this.select(sqlObject);
@@ -239,33 +186,14 @@ public class DAO {
 		return classToReturn;
 	}
 	
-	protected void select(SqlObject sqlObject) {
-		if (this.haveAccessToDB() == true) {
+	@Override
+	public void select(SqlObject sqlObject) {
+		if (this.haveAccessToDB()) {
 			this.selectInDB(sqlObject);
 		}
 	}
 	
-	private void selectInDB(SqlObject sqlObject) {
-		
-		String auxFields = "*";
-		if (sqlObject.haveFields() == true) {
-			auxFields = sqlObject.getConcatFields();
-		}
-
-		String sql = "SELECT " + auxFields;
-		sql += " FROM " + sqlObject.getTableName();
-		sql += " WHERE 1 = 1";
-
-		for (int i = 0; i < sqlObject.getWhereFieldsSize(); i++) {
-			sql += " AND " + sqlObject.getWhereField(i) + " = ?";
-		}
-		
-		sql += ";";
-		
-		System.out.println("------------ DAO.java ------------ SQL SELECT: " + sql);
-
-		this.db.executePreparedQuery(sql, sqlObject.getWhereParameters());
-	}
+	protected abstract void selectInDB(SqlObject sqlObject);
 	
 	protected <T> boolean existUsingPK(T pk) {
 		boolean exist = false;
@@ -288,33 +216,18 @@ public class DAO {
 		return exist;
 	}
 	
-	protected boolean exist(SqlObject sqlObject) {
+	@Override
+	public boolean exist(SqlObject sqlObject) {
 		boolean result = false;
-		if (this.haveAccessToDB() == true) {
+		if (this.haveAccessToDB()) {
 			result = this.existInDB(sqlObject);
 		}
 		return result;
 	}
 	
-	private boolean existInDB(SqlObject sqlObject) {
-		String sql = "SELECT COUNT(*) as exist";
-		sql += " FROM " + sqlObject.getTableName();
-		sql += " WHERE 1 = 1";
-
-		for (int i = 0; i < sqlObject.getWhereFieldsSize(); i++) {
-			sql += " AND " + sqlObject.getWhereField(i) + " = ?";
-		}
-		
-		sql += ";";
-		
-		System.out.println("------------ DAO.java ------------ SQL EXIST: " + sql);
-
-		boolean exist = this.getExistResult(sql, sqlObject);
-		
-		return exist;
-	}
+	protected abstract boolean existInDB(SqlObject sqlObject);
 	
-	private boolean getExistResult(String sql, SqlObject sqlObject) {
+	protected boolean getExistResult(String sql, SqlObject sqlObject) {
 		boolean exist = false;
 		
 		try {
@@ -358,7 +271,8 @@ public class DAO {
 		return numRegisters;
 	}
 	
-	protected int numRegisters(SqlObject sqlObject) {
+	@Override
+	public int numRegisters(SqlObject sqlObject) {
 		int numRegisters = 0;
 		if (this.haveAccessToDB() == true) {
 			numRegisters = this.numRegistersInDB(sqlObject);
@@ -366,26 +280,9 @@ public class DAO {
 		return numRegisters;
 	}
 	
-	protected int numRegistersInDB(SqlObject sqlObject) {
-		int numRegisters = 0;
-		String sql = "SELECT COUNT(*) as numRegisters";
-		sql += " FROM " + sqlObject.getTableName();
-		sql += " WHERE 1 = 1";
-
-		for (int i = 0; i < sqlObject.getWhereFieldsSize(); i++) {
-			sql += " AND " + sqlObject.getWhereField(i) + " = ?";
-		}
-		
-		sql += ";";
-		
-		System.out.println("------------ DAO.java ------------ SQL COUNT: " + sql);
-		
-		numRegisters = this.getNumRegisters(sql, sqlObject);
-		
-		return numRegisters;
-	}
+	protected abstract int numRegistersInDB(SqlObject sqlObject);
 	
-	private int getNumRegisters(String sql, SqlObject sqlObject) {
+	protected int getNumRegisters(String sql, SqlObject sqlObject) {
 		int numRegisters = 0;
 		
 		try {

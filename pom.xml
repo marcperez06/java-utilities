@@ -93,6 +93,12 @@
 		    <artifactId>ojdbc8</artifactId>
 		    <version>18.3.0.0</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>com.microsoft.sqlserver</groupId>
+			<artifactId>mssql-jdbc</artifactId>
+			<version>8.2.1.jre11</version>
+		</dependency>
 
 		<!-- *********** PDF DEPENDENCIES *********** -->
 

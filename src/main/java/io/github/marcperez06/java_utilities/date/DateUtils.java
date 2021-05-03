@@ -1,8 +1,10 @@
 package io.github.marcperez06.java_utilities.date;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 public class DateUtils {
 
@@ -52,5 +54,14 @@ public class DateUtils {
 
         return stringDate;
     }
+    
+    public static Timestamp getCurrentTimestamp() {
+		return new Timestamp(getCurrentTime());
+	}
+    
+    public static long getCurrentTime() {
+    	Date today = new Date();
+    	return today.getTime();
+	}
     
 }

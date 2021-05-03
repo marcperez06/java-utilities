@@ -3,7 +3,7 @@
  * @author Marc Perez Rodriguez
  */
 
-package io.github.marcperez06.java_utilities.database;
+package io.github.marcperez06.java_utilities.database.utils;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
