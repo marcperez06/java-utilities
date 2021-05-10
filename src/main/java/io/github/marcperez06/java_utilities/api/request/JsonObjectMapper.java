@@ -6,7 +6,7 @@ import kong.unirest.ObjectMapper;
 class JsonObjectMapper implements ObjectMapper {
 
 	public <T> T readValue(String value, Class<T> valueType) {
-		return GsonUtils.returnJsonbject(value, valueType);
+		return GsonUtils.returnJsonObject(value, valueType);
 	}
 
 	public String writeValue(Object value) {
