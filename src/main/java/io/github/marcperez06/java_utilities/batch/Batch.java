@@ -36,78 +36,111 @@ public class Batch {
 	}
 	
 	public void executeBat(String pathOfBat, boolean visualMode, String...arguments) { 
+		String command = this.createCommandForFile(pathOfBat, arguments);
+		this.executeCommandInCmd(command, visualMode);
+	}
+	
+	public void executePowershellScript(String pathOfScript, boolean visualMode, String...arguments) {
+		String command = this.createCommandForFile(pathOfScript, arguments);
+		this.executeCommandInPowerShell(command, visualMode);
+	}
+	
+	private String createCommandForFile(String pathOfile, String...arguments) {
+		String command = null;
+		
 		try {
 			
-			File bat = new File(pathOfBat);
+			File script = new File(pathOfile);
 			
-			String batArguments = (arguments != null) ? " " + this.clearBatArguments(arguments) : "";
+			String scriptArguments = (arguments != null) ? " " + this.clearArguments(arguments) : "";
 			
-			if (bat.exists()) {
-				
-				System.out.println("BAT EXISTS");
-				
+			if (script.exists()) {
 				this.waitMode = true;
-				String command = pathOfBat + batArguments;
-				this.executeWindowsCommandInCmd(command, visualMode);
+				command = pathOfile + scriptArguments;
 			}
 
 	    } catch (Exception e) { 
 	    	e.printStackTrace(); 
 	    }
-
+		
+		return command;
 	}
 	
-	public String clearBatArguments(String...arguments) {
+	private String clearArguments(String...arguments) {
 		String clearedArguments = Arrays.toString(arguments).replaceAll("\\[", "");
 		clearedArguments = clearedArguments.replaceAll("\\]", "");
 		clearedArguments = clearedArguments.replaceAll(", ", "");
 		return clearedArguments;
 	}
 	
-	public void executeWindowsCommandInCmd(String command) {
-		this.executeWindowsCommandInCmd(command, false);
+	public void executeCommandInCmd(String command) {
+		this.executeCommandInCmd(command, false);
 	}
 	
-	public void executeWindowsCommandInCmd(String command, boolean visualMode) {
-		this.currentApplication = Runtime.getRuntime(); 
-
+	public void executeCommandInCmd(String command, boolean visualMode) {
         String commandToExecute = this.constructCommandToExecuteInCmd(command, visualMode);
-        Logger.println("Command to execute --> " + commandToExecute);
-        
-        try {
-        	Logger.println("Starting cmd command");
-        	this.currentProcess = Runtime.getRuntime().exec(commandToExecute);
-        	Logger.println("Finishing cmd command");
-        	
-        } catch(Exception e) {
-        	e.printStackTrace();
-        }
-
+        this.executeCommand(commandToExecute);
+	}
+	
+	public void executeCommandInPowerShell(String command) {
+		this.executeCommandInPowerShell(command, false);
+	}
+	
+	public void executeCommandInPowerShell(String command, boolean visualMode) {
+        String commandToExecute = this.constructCommandToExecuteInPowershell(command, visualMode);
+        this.executeCommand(commandToExecute);
 	}
 	
 	private String constructCommandToExecuteInCmd(String command, boolean visualMode) {
 		String commandToExecute = "";
+		String cmdCommand = "";
 		if (visualMode == true) {
-			commandToExecute = WINDOWS_SHELL + " " + C_PARAMETER;
-	        commandToExecute += (visualMode) ? " " + VISUAL_MODE : "";
-	        commandToExecute += (this.waitMode) ? " " + WAIT_MODE : "";
+			cmdCommand = WINDOWS_SHELL + " " + C_PARAMETER;
+			cmdCommand += (visualMode) ? " " + VISUAL_MODE : "";
+			cmdCommand += (this.waitMode) ? " " + WAIT_MODE : "";
 		}
-        commandToExecute += (visualMode) ? " " + command : command;
+		
+		if (command != null && !command.isEmpty()) {
+			commandToExecute = (visualMode) ? cmdCommand + " " + command : command;
+		}
+
+        return commandToExecute;
+	}
+	
+	private String constructCommandToExecuteInPowershell(String command, boolean visualMode) {
+		String commandToExecute = "";
+		String powerShellCommand = WINDOWS_SHELL + " " + C_PARAMETER;
+		powerShellCommand += " powershell -ExecutionPolicy RemoteSigned -noprofile";
+		
+		if (visualMode == true) {
+			powerShellCommand += (visualMode) ? " -noninteractive" : "";
+		
+		}
+		
+		if (command != null && !command.isEmpty()) {
+			commandToExecute = powerShellCommand + " " + command;
+		}
+        
         return commandToExecute;
 	}
 	
 	public void executeCommand(String command) {
-		this.currentApplication = Runtime.getRuntime(); 
-		Logger.println("Command to execute --> " + command);
+		this.currentApplication = Runtime.getRuntime();
+		
+		if (command != null && !command.isEmpty()) {
+			Logger.println("Command to execute --> " + command);
 
-        try {
-        	Logger.println("Starting command");
-        	this.currentProcess = Runtime.getRuntime().exec(command);
-        	Logger.println("Finishing command");
-        	
-        } catch(Exception e) {
-        	e.printStackTrace();
-        }
+	        try {
+	        	Logger.println("Starting command");
+	        	this.currentProcess = this.currentApplication.exec(command);
+	        	Logger.println("Finishing command");
+	        	
+	        } catch(Exception e) {
+	        	e.printStackTrace();
+	        }
+		} else {
+			Logger.println("The command is empty or null");
+		}
 
 	}
 	
@@ -125,9 +158,7 @@ public class Batch {
 	public int waitFor() {
 		int result = -1;
 		try {
-			
-			Logger.println("------ wait for");
-			
+
 			if (this.currentProcess != null) {
 				result = this.currentProcess.waitFor();
 				
