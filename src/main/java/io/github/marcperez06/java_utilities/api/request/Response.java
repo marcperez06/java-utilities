@@ -88,7 +88,6 @@ public class Response<T> extends ResponseTypeHolder<T> {
 	
 	/**
 	 * Return 'true' if the response status is informative (status = 1xx), returns 'false' otherwise.
-	 * @param response - Response object returned by request to API endpoint
 	 * @return boolean - true if status is informative (status code starts with 1), false otherwise
 	 */
 	public boolean isInformative() {

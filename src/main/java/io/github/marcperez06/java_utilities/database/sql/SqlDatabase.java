@@ -1,9 +1,10 @@
 package io.github.marcperez06.java_utilities.database.sql;
 
-import java.sql.DriverManager;
+import java.sql.Driver;
 import java.sql.SQLException;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Properties;
 
 import io.github.marcperez06.java_utilities.database.Database;
 
@@ -23,6 +24,7 @@ public class SqlDatabase extends Database {
 	/**
 	 * Constructor of SqlDatabase Object
 	 * @param url - String location of database without "jdbc:sqlserver://"
+	 * @param database - String database name
 	 * @param user - String database user
 	 * @param password - String database password
 	 */
@@ -66,9 +68,9 @@ public class SqlDatabase extends Database {
 		if (super.connection == null || super.connection.isClosed() == true) {
 
 			try {
-				DriverManager.registerDriver(new com.microsoft.sqlserver.jdbc.SQLServerDriver());
+				Driver driverDatabase = (Driver) Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver").newInstance();
 				String stringConnection = this.getConnection(url, user, password);
-				super.connection = DriverManager.getConnection(stringConnection);
+				super.connection = driverDatabase.connect(stringConnection, new Properties());
 			} catch (SQLException e) {
 				e.printStackTrace();
 				super.connection = null;

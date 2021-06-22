@@ -12,6 +12,7 @@ public class RegexUtils {
 	 * Change the character specified to regex that accepts letters and numbers
 	 * 
 	 * @param text - String to analyze
+	 * @param character - String character to change using the reggex
 	 * @return String - Regular expresion
 	 */
 	public static String changeCharToWordRegex(String text, String character) {
@@ -22,6 +23,7 @@ public class RegexUtils {
 	 * Change the character specified to regex that accepts letters and numbers
 	 * 
 	 * @param text - String to analyze
+	 * @param character - String character to change using the reggex
 	 * @return String - Regular expresion
 	 */
 	public static String changeCharToWordAndNumberRegex(String text, String character) {
@@ -32,6 +34,7 @@ public class RegexUtils {
 	 * Change the character specified to regex that accepts numbers
 	 * 
 	 * @param text - String to analyze
+	 * @param character - String character to change using the reggex
 	 * @return String - Regular expresion
 	 */
 	public static String changeCharToNumericRegex(String text, String character) {
