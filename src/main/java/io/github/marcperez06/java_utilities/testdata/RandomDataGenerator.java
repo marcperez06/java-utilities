@@ -1,3 +1,6 @@
+/**
+ * @author Marc Perez Rodriguez
+ */
 package io.github.marcperez06.java_utilities.testdata;
 
 import java.util.Random;
