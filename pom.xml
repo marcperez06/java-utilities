@@ -8,7 +8,7 @@
 	<packaging>jar</packaging>
 
 	<name>java-utilities</name>
-	<description>Usefull java utilities that I use in different projects</description>
+	<description>Useful java utilities that I use in different projects</description>
 	<url>http://maven.apache.org</url>
 
 	<licenses>
@@ -107,14 +107,14 @@
 		<dependency>
 			<groupId>org.apache.pdfbox</groupId>
 			<artifactId>pdfbox</artifactId>
-			<version>2.0.19</version>
+			<version>2.0.24</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.apache.pdfbox/preflight -->
 		<dependency>
 			<groupId>org.apache.pdfbox</groupId>
 			<artifactId>preflight</artifactId>
-			<version>2.0.19</version>
+			<version>2.0.24</version>
 		</dependency>
 
 		<!-- *********** REST DEPENDENCIES *********** -->

@@ -16,9 +16,9 @@ public class Request {
 
 	private String url;
 
-	private final Map<String, Object> routeParams = new HashMap<String, Object>();
-	private final Map<String, Object> queryParams = new HashMap<String, Object>();
-	private final Map<String, String> headers = new HashMap<String, String>();
+	private Map<String, Object> routeParams = new HashMap<String, Object>();
+	private Map<String, Object> queryParams = new HashMap<String, Object>();
+	private Map<String, String> headers = new HashMap<String, String>();
 	private Object body;
 
 	private ResponseTypeHolder<?> responseType;
