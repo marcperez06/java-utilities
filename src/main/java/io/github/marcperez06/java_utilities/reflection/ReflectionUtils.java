@@ -1,6 +1,7 @@
 package io.github.marcperez06.java_utilities.reflection;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -491,6 +492,21 @@ public class ReflectionUtils {
 	}
 	
 	/**
+	 * Set if object is accessible or not
+	 * @param accessibleObject - AccessibleObject (Field, Method, Member, etc...)
+	 * @param accessible - boolean
+	 */
+	public static void setAccessible(final AccessibleObject accessibleObject, final boolean accessible) {
+		if (accessibleObject != null) {
+			try {
+				accessibleObject.setAccessible(accessible);
+			} catch (Exception e) {
+				System.out.println("Can not change the accesibility of field");
+			}
+		}
+	}
+	
+	/**
 	 * Returns the field of object or parent object by name of field.
 	 * @param <T> - Generic param for object
 	 * @param fieldName - Name of field
@@ -640,7 +656,9 @@ public class ReflectionUtils {
 		
 		if (field != null) {
 			try {
-				value = (V) field.get(object);
+				if (field.canAccess(field)) {
+					value = (V) field.get(object);
+				}			
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
