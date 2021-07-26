@@ -221,13 +221,9 @@ public class ReflectionUtils {
 	private static <T, V> void fillFieldWithObjcetOfLinkedHashMap(Field field, T obj, List<V> listOfValues) {
 		try {
 			Class<?> typeOfClass = getGenericTypeOfField(field);
-			
 			Map auxMap = (Map) listOfValues.get(0);
-			
 			V simpleObj = (V) getSimpleObjectByMap(auxMap, typeOfClass);
-			
 			field.set(obj, simpleObj);
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -243,15 +239,22 @@ public class ReflectionUtils {
 	 */
 	public static <T, V> void fillFieldWithValue(T obj, Field field, V value) {
 		
-		if (!field.isAccessible()) {
-			field.setAccessible(true);
+		if (!field.canAccess(obj)) {
+			setAccessible(field, true);
 		}
 
-		if (field.getType().isPrimitive() == true) {
-			fillFieldWithPrimitiveValue(obj, field, value);
+		if (field.canAccess(obj))  {
+			if (field.getType().isPrimitive() == true) {
+				fillFieldWithPrimitiveValue(obj, field, value);
+			} else {
+				fillFieldWithoutPrimitiveValue(obj, field, value);
+			}
 		} else {
-			fillFieldWithoutPrimitiveValue(obj, field, value);
+			String message = "Can not fill the value " + String.valueOf(value);
+			message += " in the field " + field.getName() + " of object " + obj.toString();
+			System.out.println(message);
 		}
+		
 	}
 	
 	private static <T, V> void fillFieldWithPrimitiveValue(T obj, Field field, V value) {
@@ -449,11 +452,8 @@ public class ReflectionUtils {
 	 */
 	public static List<Class<?>> getGenericParametersOfClass(Class<?> genericClass) {
 		List<Class<?>> listOfTypes = new ArrayList<Class<?>>();
-		
 		Field fieldParameterizedType = getField("parameterizedType", genericClass);
-		
 		Class<?> parameterizedTypesOfClass = getGenericTypeOfField(fieldParameterizedType);
-
 		Type type = (Type) genericClass;
 		
 		if (type != null) {
@@ -496,12 +496,14 @@ public class ReflectionUtils {
 	 * @param accessibleObject - AccessibleObject (Field, Method, Member, etc...)
 	 * @param accessible - boolean
 	 */
-	public static void setAccessible(final AccessibleObject accessibleObject, final boolean accessible) {
+	public static void setAccessible(AccessibleObject accessibleObject, final boolean accessible) {
 		if (accessibleObject != null) {
 			try {
 				accessibleObject.setAccessible(accessible);
 			} catch (Exception e) {
-				System.out.println("Can not change the accesibility of field");
+				if (accessible) {
+					accessibleObject.trySetAccessible();
+				}
 			}
 		}
 	}
@@ -531,15 +533,11 @@ public class ReflectionUtils {
 		if (clazz != null) {
 		
 			try {
-				
 				field = getDeclaredField(fieldName, clazz);
-
 			} catch(Exception e) {
 				e.printStackTrace();
 			} finally {
-				if (field != null) {
-					field.setAccessible(true);
-				}
+				setAccessible(field, true);
 			}
 			
 		}
@@ -554,21 +552,15 @@ public class ReflectionUtils {
 
 			boolean isNotObjectClass = (clazz.getName().equals("java.lang.Object") == false);
 			
-			if (isNotObjectClass == true) {
+			if (isNotObjectClass) {
 				
-				
-				field = clazz.getDeclaredField(fieldName);
-				
-				if (field == null) {
-					field = getField(fieldName, clazz.getSuperclass());
-				}
+				List<Field> fields = getAllFieldsInClass(clazz);
+				field = findObjectInList(fields, "name", fieldName);
 	
 			} else {
 				field = null;
 			}
 			
-		} catch (NoSuchFieldException e) {
-			field = getField(fieldName, clazz.getSuperclass());
 		} catch(Exception e) {
 			e.printStackTrace();
 			field = null;
@@ -1088,7 +1080,7 @@ public class ReflectionUtils {
 		
 		try {
 			
-			Class parentClass = clazz.getSuperclass();
+			Class<?> parentClass = clazz.getSuperclass();
 
 			while (parentClass != null && !parentClass.getName().equals("java.lang.Object")) {
 				methods.addAll(getMethodsOfClass(parentClass));
