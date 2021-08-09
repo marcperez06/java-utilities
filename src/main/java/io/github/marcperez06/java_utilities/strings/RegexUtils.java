@@ -55,12 +55,11 @@ public class RegexUtils {
 	}
 
 	/**
-	 * A partir de un string y una expresión regular devolvemos la parte del string
-	 * que contiene la expresión regular
+	 * Return the string part that matches to regular expresion
 	 * 
-	 * @param text  - String a analizar
-	 * @param regex - String expresión regular con la que analizar el string
-	 * @return String - Substring del string que coincide con la expresion regular
+	 * @param text  - String to analyze
+	 * @param regex - String regular expression used for analize the text
+	 * @return String - Substring of string that matches with regular expression
 	 */
 	public static String getSubstringUsingRegEx(String text, String regex) {
 		String substring = "";
@@ -79,6 +78,39 @@ public class RegexUtils {
 		}
 
 		return substring;
+	}
+	
+	/**
+	 * Transform text to regex expression
+	 * @param text - String
+	 * @return String - regex expression
+	 */
+	public static String toRegex(String text) {
+		String regex = text;
+		Pattern pattern = toPattern(text);
+		
+		if (pattern != null) {
+			regex = pattern.pattern();
+		} else {
+			System.out.println("Can not transform '" + text + "' to regex");
+		}
+		
+		return regex;
+	}
+	
+	/**
+	 * Transform text to regex expression
+	 * @param text - String
+	 * @return String - regex expression
+	 */
+	public static Pattern toPattern(String text) {
+		Pattern pattern = null;
+		try {
+			pattern = Pattern.compile(text);
+		} catch (Exception e) {
+			System.out.println("Can not create pattern: " + e.getCause().toString());
+		}
+		return pattern;
 	}
 
 }

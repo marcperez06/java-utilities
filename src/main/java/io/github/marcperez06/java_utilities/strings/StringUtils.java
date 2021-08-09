@@ -318,4 +318,41 @@ public class StringUtils {
 		return isJavaVariableType;
 	}
 	
+	public static String toPascalCase(String sentence) {
+		sentence = clearSpecialCharacters(sentence);
+		StringBuilder pascalCase = new StringBuilder();
+		String[] words = split(sentence, " ");
+		for (String word : words) {
+			word = wordToPascalCase(word);
+			pascalCase.append(word);
+		}
+		return pascalCase.toString();
+	}
+	
+	public static String wordToPascalCase(String word) {
+		String wordPascalCase = word;
+		if (!isBlank(word)) {
+			wordPascalCase = stripDiacritics(word);
+			wordPascalCase = capitalizeWord(word.toLowerCase());
+		}
+		return wordPascalCase;
+	}
+	
+	public static String toCamelCase(String sentence) {
+		sentence = clearSpecialCharacters(sentence);
+		StringBuilder camelCase = new StringBuilder();
+		String[] words = split(sentence, " ");
+		for (int i = 0; i < words.length; i++) {
+			String word = words[i];
+			if (i == 0) {
+				word = stripDiacritics(word);
+				word = word.toLowerCase();
+			} else {
+				word = wordToPascalCase(word);
+			}
+			camelCase.append(word);
+		}
+		return camelCase.toString();
+	}
+
 }

@@ -1,5 +1,6 @@
 package io.github.marcperez06.java_utilities;
 
+import io.github.marcperez06.java_utilities.crypto.CryptoUtils;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -33,6 +34,6 @@ public class AppTest
      */
     public void testApp()
     {
-        assertTrue( true );
+    	assertTrue( true );
     }
 }
