@@ -37,7 +37,7 @@ public class DataCollector {
 	}
 	
 	public static boolean addData(String key, Object value) {
-		boolean add = false;
+		boolean add = true;
 		if (!existData(key)) {
 			setData(key, value);
 		} else {
@@ -88,7 +88,7 @@ public class DataCollector {
 		Object returnValue = null;
 		key = cleanKey(key);
 		
-		if (existData(key)) {	
+		if (existData(key)) {
 			returnValue = data.get(key);
 		} else {
 			String errorMessage = "Key does not exist in data collector: " + key;
