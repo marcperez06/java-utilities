@@ -39,6 +39,11 @@ public class StringUtils {
 		return isBlank;
 	}
 	
+	/**
+	 * Capitalize the word specified in the param
+	 * @param word - String word
+	 * @return String - Word capaitalized
+	 */
 	public static String capitalizeWord(String word) {
 		String capitalize = "";
 		if (word != null && !word.isEmpty()) {
@@ -49,6 +54,11 @@ public class StringUtils {
 		return capitalize;
 	}
 	
+	/**
+	 * Uncapitalize the word specified in the param
+	 * @param word - String word
+	 * @return String - Word uncapaitalized
+	 */
 	public static String uncapitalizeWord(String word) {
 		String uncapitalize = "";
 		if (word != null && !word.isEmpty()) {
@@ -319,6 +329,7 @@ public class StringUtils {
 	}
 	
 	public static String toPascalCase(String sentence) {
+		sentence = stripDiacritics(sentence);
 		sentence = clearSpecialCharacters(sentence);
 		StringBuilder pascalCase = new StringBuilder();
 		String[] words = split(sentence, " ");
@@ -339,6 +350,7 @@ public class StringUtils {
 	}
 	
 	public static String toCamelCase(String sentence) {
+		sentence = stripDiacritics(sentence);
 		sentence = clearSpecialCharacters(sentence);
 		StringBuilder camelCase = new StringBuilder();
 		String[] words = split(sentence, " ");
