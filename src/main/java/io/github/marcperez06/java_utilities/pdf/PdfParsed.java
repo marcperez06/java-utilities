@@ -103,6 +103,9 @@ public class PdfParsed {
 			parsedText += this.parsedHeader;
 			parsedText += this.parsedContent;
 			parsedText += this.parsedFooter;
+			parsedText = parsedText.replaceAll("\r", "");
+			parsedText = parsedText.replaceAll("\n", "");
+			parsedText = parsedText.replaceAll("\t", "");
 		} else {
 			System.out.println("PDF not is parsed, for this reason, return empty string");
 		}

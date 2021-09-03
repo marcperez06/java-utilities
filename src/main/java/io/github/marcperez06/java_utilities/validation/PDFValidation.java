@@ -71,8 +71,8 @@ public class PDFValidation {
 	private static boolean isASCIIEncoded(PdfParsed pdfParsed) {
 		boolean isAscii = false;
 		
-		if (pdfParsed != null && !pdfParsed.getParsedContent().isEmpty()) {
-			byte[] bytes = pdfParsed.getParsedContent().getBytes();
+		if (pdfParsed != null && !pdfParsed.getParsedText().isEmpty()) {
+			byte[] bytes = pdfParsed.getParsedText().getBytes();
 			boolean notIsAscii = false;
 			
 			for (int i = 0; i < bytes.length && !notIsAscii; i++) {
@@ -101,11 +101,11 @@ public class PDFValidation {
 	public static boolean isUTF8Encoded(PdfParsed pdfParsed) {
 		boolean isUtf8 = false;
 		
-		if (pdfParsed != null && !pdfParsed.getParsedContent().isEmpty()) {
+		if (pdfParsed != null && !pdfParsed.getParsedText().isEmpty()) {
 			
 			try {
 				
-				byte[] bytes = pdfParsed.getParsedContent().getBytes("UTF-8");
+				byte[] bytes = pdfParsed.getParsedText().getBytes("UTF-8");
 				int length = bytes.length;
 				int chunk = length / 4;
 				int checkFirst = 0;
@@ -173,7 +173,7 @@ public class PDFValidation {
 		
 		if (pdfParsed != null) {
 		
-			String parsedText = pdfParsed.getParsedContent();
+			String parsedText = pdfParsed.getParsedText();
 			
 			if (!parsedText.isEmpty()) {
 				containsText = parsedText.contains(text);
