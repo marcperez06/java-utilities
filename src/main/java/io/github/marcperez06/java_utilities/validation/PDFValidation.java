@@ -173,6 +173,7 @@ public class PDFValidation {
 		
 		if (pdfParsed != null) {
 		
+			text = cleanText(text);
 			String parsedText = pdfParsed.getParsedText();
 			
 			if (!parsedText.isEmpty()) {
@@ -182,6 +183,13 @@ public class PDFValidation {
 		}
 		
 		return containsText;		
+	}
+	
+	private static String cleanText(String text) {
+		text = text.replaceAll("\r", "");
+		text = text.replaceAll("\n", "");
+		text = text.replaceAll("\t", "");
+		return text;
 	}
 	
 	public static boolean validatePdf(String path) {

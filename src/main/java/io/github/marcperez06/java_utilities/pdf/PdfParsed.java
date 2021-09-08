@@ -97,12 +97,29 @@ public class PdfParsed {
 		return parsedFooter;
 	}
 	
-	public String getParsedText() {
+	/**
+	 * Return the pdf conent
+	 * @return Pdf content - String
+	 */
+	public String getOriginalParsedText() {
 		String parsedText = "";
 		if (this.isParsed) {
 			parsedText += this.parsedHeader;
 			parsedText += this.parsedContent;
 			parsedText += this.parsedFooter;
+		} else {
+			System.out.println("PDF not is parsed, for this reason, return empty string");
+		}
+		return parsedText;
+	}
+	
+	/**
+	 * Return the pdf text in one line, cleaning \r \n \t characters
+	 * @return Pdf content in one line - String
+	 */
+	public String getParsedText() {
+		String parsedText = this.getOriginalParsedText();
+		if (!parsedText.isEmpty()) {
 			parsedText = parsedText.replaceAll("\r", "");
 			parsedText = parsedText.replaceAll("\n", "");
 			parsedText = parsedText.replaceAll("\t", "");

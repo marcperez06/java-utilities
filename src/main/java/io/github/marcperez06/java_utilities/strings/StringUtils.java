@@ -1,5 +1,8 @@
 package io.github.marcperez06.java_utilities.strings;
 
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,7 +15,9 @@ import io.github.marcperez06.java_utilities.collection.list.ListUtils;
 
 public class StringUtils {
 
-	private static String[] RESERVED_KEYWORDS = {"null", "abstract", "assert", "boolean", "true", "false", "break",
+	private static final String UTF_8 = "UTF-8";
+	
+	private static final String[] RESERVED_KEYWORDS = {"null", "abstract", "assert", "boolean", "true", "false", "break",
 												"byte", "try", "catch", "case", "char", "class", "continue", "default",
 												"do", "double", "if", "else", "enum", "exports", "extends", "final",
 												"finally", "float", "for", "implements", "import", "instanceof", "int",
@@ -21,11 +26,11 @@ public class StringUtils {
 												"super", "synchronized", "this", "throw", "throws", "void", "volatile",
 												"while", "const", "goto"};
 	
-	private static String[] RESERVED_JAVA_TYPES = {"int", "double", "float", "long", "boolean", 
-													"Integer", "Double", "Float", "Long", 
-													"Object", "String", "Boolean"};
+	private static final String[] RESERVED_JAVA_TYPES = {"int", "double", "float", "long", "boolean", 
+														"Integer", "Double", "Float", "Long", 
+														"Object", "String", "Boolean"};
 	
-	public static final Pattern DIACRITICS_AND_FRIENDS = Pattern.compile("[\\p{InCombiningDiacriticalMarks}\\p{IsLm}\\p{IsSk}]+");
+	public static final Pattern DIACRITICS_AND_FRIENDS = Pattern.compile("[\\p{InCombiningDiacriticalMarks}\\p{IsLm}\\p{IsSk}\\p{ASCII}]+");
 
 	private StringUtils() {}
 	
@@ -272,10 +277,10 @@ public class StringUtils {
 		return cutText;
 	}
 
-	public static String stripDiacritics(String str) {
-		str = Normalizer.normalize(str, Normalizer.Form.NFD);
-		str = DIACRITICS_AND_FRIENDS.matcher(str).replaceAll("");
-		return str;
+	public static String stripDiacritics(String text) {
+		text = Normalizer.normalize(text, Normalizer.Form.NFD);
+		text = DIACRITICS_AND_FRIENDS.matcher(text).replaceAll("");
+		return text;
 	}
 
 	public static String clearSpecialCharactersWithoutWhiteSpace(String text) {
@@ -365,6 +370,27 @@ public class StringUtils {
 			camelCase.append(word);
 		}
 		return camelCase.toString();
+	}
+	
+	public static String encode(String text) {
+		String encodedText = "";
+		if (!isBlank(text)) {
+			try {
+				encodedText = URLEncoder.encode(text, UTF_8);
+			} catch (Exception e) { }
+		}
+		return encodedText;
+	}
+	
+	public static String decode(String text) {
+		String decodedText = "";
+		// decodedText = Normalizer.normalize(text, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
+		if (!isBlank(text)) {
+			try {
+				decodedText = URLDecoder.decode(text, UTF_8);
+			} catch (Exception e) { }
+		}
+		return decodedText;
 	}
 
 }
