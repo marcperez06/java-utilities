@@ -1145,7 +1145,7 @@ public class ReflectionUtils {
 	/**
 	 * Try to set if object is accessible or not
 	 * @param accessibleObject - AccessibleObject (Field, Method, Member, etc...)
-	 * @param accessible       - boolean
+	 * @param obj - Array of Objects (Optional)
 	 * @return boolean - true if can modify accessible property, false otherwise;
 	 */
 	public static boolean canAccess(AccessibleObject accessibleObject, Object...obj) {
@@ -1175,7 +1175,7 @@ public class ReflectionUtils {
 	/**
 	 * Try to set if object is accessible or not
 	 * @param accessibleObject - AccessibleObject (Field, Method, Member, etc...)
-	 * @param accessible       - boolean
+	 * @param accessible - boolean
 	 * @return boolean - true if can modify accessible property, false otherwise;
 	 */
 	public static boolean tryToSetAccessible(AccessibleObject accessibleObject, final boolean accessible) {
