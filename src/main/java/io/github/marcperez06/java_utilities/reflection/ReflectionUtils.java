@@ -19,6 +19,8 @@ import java.util.Map.Entry;
 
 import com.google.gson.internal.LinkedTreeMap;
 
+import io.github.marcperez06.java_utilities.collection.list.ListUtils;
+
 public class ReflectionUtils {
 	
 	private ReflectionUtils() {}
@@ -238,12 +240,9 @@ public class ReflectionUtils {
 	 * @param value - Value that you want to put in field
 	 */
 	public static <T, V> void fillFieldWithValue(T obj, Field field, V value) {
-		
-		if (!field.canAccess(obj)) {
-			setAccessible(field, true);
-		}
+		tryToSetAccessible(field, true);
 
-		if (field.canAccess(obj))  {
+		if (canAccess(field, obj))  {
 			if (field.getType().isPrimitive() == true) {
 				fillFieldWithPrimitiveValue(obj, field, value);
 			} else {
@@ -492,23 +491,6 @@ public class ReflectionUtils {
 	}
 	
 	/**
-	 * Set if object is accessible or not
-	 * @param accessibleObject - AccessibleObject (Field, Method, Member, etc...)
-	 * @param accessible - boolean
-	 */
-	public static void setAccessible(AccessibleObject accessibleObject, final boolean accessible) {
-		if (accessibleObject != null) {
-			try {
-				accessibleObject.setAccessible(accessible);
-			} catch (Exception e) {
-				if (accessible) {
-					accessibleObject.trySetAccessible();
-				}
-			}
-		}
-	}
-	
-	/**
 	 * Returns the field of object or parent object by name of field.
 	 * @param <T> - Generic param for object
 	 * @param fieldName - Name of field
@@ -537,7 +519,7 @@ public class ReflectionUtils {
 			} catch(Exception e) {
 				e.printStackTrace();
 			} finally {
-				setAccessible(field, true);
+				tryToSetAccessible(field, true);
 			}
 			
 		}
@@ -648,7 +630,7 @@ public class ReflectionUtils {
 		
 		if (field != null) {
 			try {
-				if (field.canAccess(field)) {
+				if (canAccess(field, object)) {
 					value = (V) field.get(object);
 				}			
 			} catch (Exception e) {
@@ -716,11 +698,7 @@ public class ReflectionUtils {
 				
 			}
 
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
+		} catch (Throwable e) {
 			e.printStackTrace();
 		}
 
@@ -761,11 +739,7 @@ public class ReflectionUtils {
 				
 			}
 			
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
+		} catch (Throwable e) {
 			e.printStackTrace();
 		}
 
@@ -806,11 +780,7 @@ public class ReflectionUtils {
 				
 			}
 			
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
+		} catch (Throwable e) {
 			e.printStackTrace();
 		}
 
@@ -851,13 +821,7 @@ public class ReflectionUtils {
 
 			}
 			
-		} catch (NoSuchFieldException e) {
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
+		} catch (Throwable e) {
 			e.printStackTrace();
 		}
 
@@ -1013,8 +977,8 @@ public class ReflectionUtils {
 			}
 			
 		} catch (Exception e) {
-			//Logger.println("Object can not be transform to Class specified, null will be returned");
 			e.printStackTrace();
+			System.out.println("Object can not be transform to Class specified, null will be returned");
 			obj = null;
 		}
 		
@@ -1045,6 +1009,7 @@ public class ReflectionUtils {
 	}
 	
 	// ******************** GET METHODS ***********************************
+	
 	public static <T> Method getMethod(T object, String name, Class<?>...parameterTypes) {
 		Method method = null;
 		if (object != null) {
@@ -1058,7 +1023,7 @@ public class ReflectionUtils {
 		Method method = null;
 		try {
 			method = clazz.getDeclaredMethod(name, parameterTypes);
-			method.setAccessible(true);
+			tryToSetAccessible(method, true);
 		} catch (Exception e) {
 			method = null;
 			e.printStackTrace();
@@ -1110,6 +1075,136 @@ public class ReflectionUtils {
 		return methods;
 	}
 	
+	/**
+	 * Execute existing method inside object, return an Object type, need to cast to correct return object type
+	 * @param <T> - Generic param for object
+	 * @param obj - Object that executes the method
+	 * @param methodName - String name of method
+	 * @param params - Array of Objects (Optional)
+	 * @return Object - return the result of method, need to be casted to correct result type, The default return is of type RuntimeException, only if cannot execute the method
+	 */
+	public static <T> Object executeMethod(T obj, String methodName, Object...params) {
+		Object result = new RuntimeException("Can not execute the method " + methodName);
+		boolean canExecuteMethod = obj != null;
+		canExecuteMethod &= methodName != null && !methodName.isEmpty();
+
+		if (canExecuteMethod) {
+			
+			if (params != null && params.length > 0) {
+				result = executeMethodWithParams(obj, methodName, params);
+			} else {
+				result = executeMethodWithoutParams(obj, methodName);
+			}
+
+		}
+		
+		return result;
+	}
+	
+	private static <T> Object executeMethodWithoutParams(T obj, String methodName) {
+		Object result = null;
+		Method method = getMethod(obj, methodName);
+		if (method != null) {
+			try {
+				result = method.invoke(obj);
+			} catch (Throwable e) {
+				result = new RuntimeException("Can not execute the method " + methodName);
+			}
+		}
+		return result;
+	}
+	
+	private static <T> Object executeMethodWithParams(T obj, String methodName, Object...params) {
+		Object result = new RuntimeException("Can not execute the method " + methodName);
+		
+		List<Class<?>> classOfParams = new ArrayList<Class<?>>();
+		
+		for (Object param : params) {
+			Class<?> paramClass = getGenericParameterOfClass(params[0].getClass());
+			classOfParams.add(paramClass);
+		}
+		
+		Class<?>[] paramsClass = ListUtils.toArray(classOfParams);
+		Method method = getMethod(obj, methodName, paramsClass);
+		
+		if (method != null) {
+			try {
+				result = method.invoke(obj, params);
+			} catch (Throwable e1) {
+				result = new RuntimeException("Can not execute the method " + methodName);
+			}
+		}
+		
+		return result;
+	}
+	
+	// ******************** END GET METHODS ***********************************
+	
+	// ******************** ACCESSIBILITY ***********************************
+
+	/**
+	 * Try to set if object is accessible or not
+	 * @param accessibleObject - AccessibleObject (Field, Method, Member, etc...)
+	 * @param accessible       - boolean
+	 * @return boolean - true if can modify accessible property, false otherwise;
+	 */
+	public static boolean canAccess(AccessibleObject accessibleObject, Object...obj) {
+		boolean canAccess = false;
+		if (accessibleObject != null) {
+			try {
+				canAccess = accessibleObject.isAccessible();
+			} catch (Throwable e) {
+				
+				try {
+					Object result = executeMethod(accessibleObject, "canAccess", obj);
+					if (result instanceof RuntimeException) {
+						canAccess = false;
+					} else {
+						canAccess = (boolean) result;
+					}	
+				} catch (Throwable e1) {
+					canAccess = false;
+				}
+				
+			}
+		}
+
+		return canAccess;
+	}
+
+	/**
+	 * Try to set if object is accessible or not
+	 * @param accessibleObject - AccessibleObject (Field, Method, Member, etc...)
+	 * @param accessible       - boolean
+	 * @return boolean - true if can modify accessible property, false otherwise;
+	 */
+	public static boolean tryToSetAccessible(AccessibleObject accessibleObject, final boolean accessible) {
+		boolean canModifyAccessibility = false;
+		if (accessibleObject != null) {
+			try {
+				accessibleObject.setAccessible(accessible);
+			} catch (Throwable e) {
+				
+				try {
+					Object result = executeMethod(accessibleObject, "trySetAccessible");
+					if (result instanceof RuntimeException) {
+						canModifyAccessibility = false;
+					} else {
+						canModifyAccessibility = (boolean) result;
+					}	
+				} catch (Throwable e1) {
+					canModifyAccessibility = false;
+				}
+
+			}
+		}
+
+		return canModifyAccessibility;
+	}
+	
+	// ******************** END ACCESSIBILITY ***********************************
+	
+	@SuppressWarnings("unchecked")
 	public static <T> void printObjectProperties(T object) {
 		
 		if (object != null) {
