@@ -373,7 +373,7 @@ public class FileUtils {
 	public static boolean deleteFile(String path) {
 		boolean fileDeleted = false;
 		
-		if (path != null && path.isEmpty()) {
+		if (path != null && !path.isEmpty()) {
 			
 			File file = new File(path);
 			fileDeleted = deleteFile(file);
