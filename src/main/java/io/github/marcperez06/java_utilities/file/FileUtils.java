@@ -30,6 +30,11 @@ public class FileUtils {
 	
 	private FileUtils() {}
 	
+	/**
+	 * Returns true if exist file, false otherwise
+	 * @param path - String
+	 * @return boolean - true if exist file, false otherwise
+	 */
 	public static boolean existFile(String path) {
 		boolean existFile = false;
 		
@@ -37,12 +42,18 @@ public class FileUtils {
 			File file = new File(path);
 			existFile = file.exists();
 		} catch (Exception e) {
+			existFile = false;
 			e.printStackTrace();
 		}
 		
 		return existFile;
 	}
 	
+	/**
+	 * Creates a file if not exist, otherwise returns the existent file, if have an exception return null
+	 * @param path - String
+	 * @return File - the created or existent file, If have an exception return null
+	 */
 	public static File createFileIfNotExist(String path) {
 		return createFileIfNotExist(path, FILE);
 	}
@@ -60,6 +71,7 @@ public class FileUtils {
 			e.printStackTrace();
 			file = null;
 		}
+
 		return file;
 	}
 	
@@ -72,11 +84,11 @@ public class FileUtils {
 	
 	private static void createFileOrDirectory(File file, String typeOfFile) {
 		try {
-			if (file.exists() == false) {
+			if (!file.exists()) {
 				
-				if (typeOfFile.equals(DIRECTORY) == true) {
+				if (typeOfFile.equals(DIRECTORY)) {
 					file.mkdir();
-				} else if (typeOfFile.equals(FILE) == true){
+				} else if (typeOfFile.equals(FILE)) {
 					file.createNewFile();
 				}
 	
@@ -282,6 +294,12 @@ public class FileUtils {
 	
 	// --- ESCRITURA EN FICHERO ---
 	
+	/**
+	 * Add a line in the file, if not exists, creates it
+	 * @param line - String
+	 * @param path - String
+	 * @return boolean - true if add a line in the file, false otherwise
+	 */
 	public static boolean addLineInFile(String line, String path) {
 		boolean addLine = false;
 		
@@ -303,6 +321,13 @@ public class FileUtils {
 		return addLine;
 	}
 	
+	/**
+	 * Add a line in the file with encoding specified, if not exists, creates it
+	 * @param line - String
+	 * @param path - String
+	 * @param encoding - String (Example: UTF-8)
+	 * @return boolean - true if add a line in the file, false otherwise
+	 */
 	public static boolean addLineInFileWithEncoding(String line, String path, String encoding) {
 		boolean addLine = false;
 
@@ -324,6 +349,12 @@ public class FileUtils {
 		return addLine;
 	}
 	
+	/**
+	 * Write a file, if not exists, creates it
+	 * @param txt - String
+	 * @param path - String
+	 * @return boolean - true if write the file, false otherwise
+	 */
 	public static boolean writeTxt(String txt, String path) {
 		boolean write = false;
 
@@ -346,6 +377,13 @@ public class FileUtils {
 		return write;
 	}
 	
+	/**
+	 * Write a file with encoding specified, if not exists, creates it
+	 * @param txt - String
+	 * @param path - String
+	 * @param encoding - String (Example: UTF-8)
+	 * @return boolean - true if write the file, false otherwise
+	 */
 	public static boolean writeTxtWithEncoding(String txt, String path, String encoding) {
 		boolean write = false;
 		
@@ -370,25 +408,31 @@ public class FileUtils {
 
 	// ---- ELIMINAR FICHEROS I / O DIRECTORIOS ----
 	
+	/**
+	 * Delete a file 
+	 * @param path - String
+	 * @return boolean - true if delete file, false otherwise
+	 */
 	public static boolean deleteFile(String path) {
 		boolean fileDeleted = false;
-		
 		if (path != null && !path.isEmpty()) {
-			
 			File file = new File(path);
-			fileDeleted = deleteFile(file);
-			
+			fileDeleted = deleteFile(file);	
 		}
-
 		return fileDeleted;
 	}
 	
+	/**
+	 * Delete a file 
+	 * @param file - File
+	 * @return boolean - true if delete file, false otherwise
+	 */
 	public static boolean deleteFile(File file) {
 		boolean fileDeleted = false;
 		if (file != null) {
 			fileDeleted = file.delete();
 			
-			if (fileDeleted == true) {
+			if (fileDeleted) {
 				System.out.println("The file was deleted");
 			} else {
 				System.out.println("The file can not be deleted");
@@ -443,6 +487,35 @@ public class FileUtils {
 		}
 		
 		return directoryDeleted;
+	}
+	
+	/**
+	 * Delete a file or directory with all the files inside it
+	 * @param path - String
+	 * @return boolean - true if delete file or directory, false otherwise
+	 */
+	public static boolean delete(String path) {
+		boolean delete = false;
+		if (path != null && path.isEmpty()) {
+			File fileOrDirectory = new File(path);
+			delete = delete(fileOrDirectory);
+		}
+		return delete;
+	}
+	
+	/**
+	 * Delete a file or directory with all the files inside it
+	 * @param fileOrDirectory - File file or directory
+	 * @return boolean - true if delete file or directory, false otherwise
+	 */
+	public static boolean delete(File fileOrDirectory) {
+		boolean delete = false;
+		if (fileOrDirectory.isFile()) {
+			delete = deleteFile(fileOrDirectory);
+		} else {
+			delete = deleteDirectory(fileOrDirectory);
+		}
+		return delete;
 	}
 	
 }
