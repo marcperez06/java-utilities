@@ -191,9 +191,9 @@ public class XmlUtils {
 		String attributeValue = "";
 		NamedNodeMap attributesMap = node.getAttributes();
 		
-		for (int i = 0; i < attributesMap.getLength() && founded == false; i++) {
+		for (int i = 0; i < attributesMap.getLength() && !founded; i++) {
 			Node attribute = attributesMap.item(i);
-			if (attributeName.equals(attribute.getNodeName()) == true) {
+			if (attributeName.equals(attribute.getNodeName())) {
 				attributeValue = attribute.getTextContent();
 				founded = true;
 			}

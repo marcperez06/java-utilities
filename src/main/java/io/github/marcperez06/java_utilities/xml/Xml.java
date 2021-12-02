@@ -8,6 +8,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -16,8 +17,12 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import io.github.marcperez06.java_utilities.json.GsonUtils;
+import io.github.marcperez06.java_utilities.logger.Logger;
 
 public class Xml {
 
@@ -51,15 +56,6 @@ public class Xml {
 	
 	public void setDocument(Document document) {
 		this.document = document;
-	}
-	
-	@Override
-	public String toString() {
-		String str = "";
-		if (this.haveDocument() == true) {
-			str = this.document.getTextContent();
-		}
-		return str;
 	}
 	
 	private Document getDocumentFromFile(String path) {
@@ -176,7 +172,7 @@ public class Xml {
         }
         return nodeList;
     }
-	
+
     public List<Node> getNodesByTagName(String tagName) {
         List<Node> list= new ArrayList<Node>();
         if (this.haveDocument() == true) {
@@ -316,6 +312,180 @@ public class Xml {
 		}
 		
 		return node;
+	}
+	
+	public boolean haveChildren(Node node) {
+		return !this.getChildNodes(node).isEmpty();
+	}
+	
+	public List<Node> getChildNodes(Node node) {
+		List<Node> children = new ArrayList<Node>();
+		if (node != null && node.hasChildNodes()) {
+			NodeList nodes = node.getChildNodes();
+			for (int i = 0; i < nodes.getLength(); i++) {
+				Node item = nodes.item(i);
+				this.addNodeInList(children, item);
+			}
+		}
+		return children;
+	}
+	
+	public List<Node> getNodesByAttribute(String attributeName, String attributeValue) {
+        List<Node> list= new ArrayList<Node>();
+        if (this.haveDocument() == true) {
+            NodeList nodeList = this.document.getChildNodes();
+            List<Node> listOfNodes = this.getListOfNodesByAttributeFromNodeList(nodeList, attributeName, attributeValue);
+            if (listOfNodes.size() > 0) {
+                list.addAll(listOfNodes);
+            }
+        }
+        return list;
+    }
+
+    private List<Node> getListOfNodesByAttributeFromNodeList(NodeList nodeList, String attributeName, String attributeValue) {
+        List<Node> list= new ArrayList<Node>();
+        if (nodeList != null) {
+            for (int i = 0; i < nodeList.getLength(); i++) {
+            	List<Node> aux = new ArrayList<Node>();
+                Node node = nodeList.item(i);
+                String nodeAttribute = this.getNodeAttribute(node, attributeName);
+                
+                if (node.hasChildNodes()) {
+                	aux = this.getListOfNodesByAttributeFromNodeList(node.getChildNodes(), attributeName, attributeValue);	
+                }
+
+                if (attributeValue.equals(nodeAttribute)) {
+                    this.addNodeInList(list, node);
+                }
+
+                if (aux.isEmpty()) {
+                    list.addAll(aux);
+                }
+            }
+        }
+        return list;
+    }
+    
+    public String getNodeAttribute(Node node, String attributeName) {
+    	boolean founded = false;
+		String attributeValue = "";
+		NamedNodeMap attributesMap = node.getAttributes();
+		
+		for (int i = 0; i < attributesMap.getLength() && !founded; i++) {
+			Node attribute = attributesMap.item(i);
+			if (attributeName.equals(attribute.getNodeName())) {
+				attributeValue = attribute.getTextContent();
+				founded = true;
+			}
+		}
+		
+		return attributeValue;
+    }
+    
+    public String getNodeTag(Node node) {
+		String tag = null;
+		if (node != null) {
+			tag = node.getNodeName();
+		}
+		return tag;
+	}
+	
+	public String getNodeValue(Node node) {
+		String value = null;
+		if (node != null) {
+			
+			try {
+				if (node.getNodeType() == Node.TEXT_NODE) {
+					value = node.getTextContent();
+				} else {
+					value = node.getNodeValue();
+				}
+			} catch (Exception e) { }
+
+		}
+		return value;
+	}
+	
+	// ******** Transformations *************
+	
+	public <V> String toJson() {
+		HashMap<String, V> map = this.toMap();
+		return GsonUtils.getJSON(map);
+	}
+	
+	public <V> HashMap<String, V> toMap() {
+		List<HashMap<String, V>> list = this.xmlToMapList();
+		HashMap<String, V> map = new HashMap<String, V>();
+		if (!list.isEmpty()) {
+			map = list.get(0);
+		}
+		return map;
+	}
+	
+	public <V> List<HashMap<String, V>> xmlToMapList() {
+		List<HashMap<String, V>> list = new ArrayList<HashMap<String, V>>();
+		HashMap<String, V> map = new HashMap<String, V>();
+		
+		if (this.haveDocument()) {
+			NodeList nodes = this.document.getChildNodes();
+			for (int i = 0; i < nodes.getLength(); i++) {
+				Node item = nodes.item(i);
+				String key = this.getNodeTag(item);
+				HashMap<String, V> value = this.toMapFromNode(item);
+				map.put(key, (V) value);
+				list.add(map);
+			}
+		}
+		return list;
+	}
+	
+	private <V> HashMap<String, V> toMapFromNode(Node node) {
+		HashMap<String, V> map = new HashMap<String, V>();
+
+		if (node != null) {
+
+			List<Node> nodes = this.getChildNodes(node);
+			
+			if (!nodes.isEmpty()) {
+				
+				for (int i = 0; i < nodes.size(); i++) {
+					Node item = nodes.get(i);
+					this.addNodeToMap(item, map);
+				}
+
+			} else {
+				this.addNodeToMap(node, map);
+			}
+		}
+		return map;
+	}
+	
+	private <V> void addNodeToMap(Node node, HashMap<String, V> map) {
+		String key = this.getNodeTag(node);
+		
+		if (this.haveChildren(node)) {
+			HashMap<String, V> value = this.toMapFromNode(node);
+			if (value.containsKey("#text")) {
+				// Delete node #text level
+				String nodeValue = (String) value.get("#text");
+				map.put(key, (V) nodeValue);
+			} else {
+				map.put(key, (V) value);	
+			}
+		} else {
+			key = this.getNodeTag(node);
+			String value = this.getNodeValue(node);
+			map.put(key, (V) value);
+		}
+	}
+    
+    @Override
+	public String toString() {
+		String str = "";
+		if (this.haveDocument() == true) {
+			str = this.document.getTextContent();
+		}
+		return str;
 	}
 	
 }
