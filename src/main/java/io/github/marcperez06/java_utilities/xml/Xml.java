@@ -408,13 +408,28 @@ public class Xml {
 	
 	// ******** Transformations *************
 	
+	public <T> T toObject(Class<T> objectClass) {
+		String json = this.toJson();
+		return GsonUtils.returnJsonObject(json, objectClass);
+	}
+	
+	public <T> List<T> toListOfObjects(Class<T> objectClass) {
+		String json = this.toJsonArray();
+		return GsonUtils.returnJsonObjectList(json, objectClass);
+	}
+
 	public <V> String toJson() {
 		HashMap<String, V> map = this.toMap();
 		return GsonUtils.getJSON(map);
 	}
 	
+	public <V> String toJsonArray() {
+		List<HashMap<String, V>> map = this.toListOfMaps();
+		return GsonUtils.getJSON(map);
+	}
+	
 	public <V> HashMap<String, V> toMap() {
-		List<HashMap<String, V>> list = this.xmlToMapList();
+		List<HashMap<String, V>> list = this.toListOfMaps();
 		HashMap<String, V> map = new HashMap<String, V>();
 		if (!list.isEmpty()) {
 			map = list.get(0);
@@ -422,7 +437,7 @@ public class Xml {
 		return map;
 	}
 	
-	public <V> List<HashMap<String, V>> xmlToMapList() {
+	public <V> List<HashMap<String, V>> toListOfMaps() {
 		List<HashMap<String, V>> list = new ArrayList<HashMap<String, V>>();
 		HashMap<String, V> map = new HashMap<String, V>();
 		
