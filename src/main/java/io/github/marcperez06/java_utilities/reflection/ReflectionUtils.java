@@ -532,9 +532,10 @@ public class ReflectionUtils {
 		
 		try {
 
-			boolean isNotObjectClass = (clazz.getName().equals("java.lang.Object") == false);
+			boolean isNotObjectClassAndAccesibleObject = !clazz.getName().equals("java.lang.Object");
+			isNotObjectClassAndAccesibleObject &= !clazz.getName().equals("java.lang.reflect.AccesibleObject");
 			
-			if (isNotObjectClass) {
+			if (isNotObjectClassAndAccesibleObject) {
 				
 				List<Field> fields = getAllFieldsInClass(clazz);
 				field = findObjectInList(fields, "name", fieldName);
