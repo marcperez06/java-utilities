@@ -4,7 +4,7 @@
 
 	<groupId>io.github.marcperez06</groupId>
 	<artifactId>java-utilities</artifactId>
-	<version>0.0.4</version>
+	<version>0.0.5</version>
 	<packaging>jar</packaging>
 
 	<name>java-utilities</name>
@@ -79,13 +79,13 @@
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>
-			<version>${excel.vesrion}</version>
+			<version>${excel.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
-			<version>${excel.vesrion}</version>
+			<version>${excel.version}</version>
 		</dependency>
 
 		<!-- *********** DATABASE DEPENDENCIES *********** -->

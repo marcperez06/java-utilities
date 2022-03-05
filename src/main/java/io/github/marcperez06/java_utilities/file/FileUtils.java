@@ -429,7 +429,7 @@ public class FileUtils {
 	 */
 	public static boolean deleteFile(File file) {
 		boolean fileDeleted = false;
-		if (file != null) {
+		if (file != null && file.exists()) {
 			fileDeleted = file.delete();
 			
 			if (fileDeleted) {
@@ -475,7 +475,7 @@ public class FileUtils {
 					if (file.isDirectory()) {
 						deleteDirectory(file);
 					} else {
-						file.delete();
+						deleteFile(file);
 					}
 					
 				}

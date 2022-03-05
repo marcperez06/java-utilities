@@ -27,6 +27,7 @@ public class Request {
 
 	public Request(HttpMethodEnum method) {
 		this(null, method);
+		this.setResponseType(new ResponseTypeHolder<Void>() {});
 	}
 	
 	public Request(RequestCredentials credentials, HttpMethodEnum method) {
