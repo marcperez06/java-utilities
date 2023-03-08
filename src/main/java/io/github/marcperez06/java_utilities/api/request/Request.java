@@ -14,7 +14,7 @@ public class Request {
 
 	private String url;
 
-	private Map<String, Object> routeParams = new HashMap<String, Object>();
+	private Map<String, Object> pathParams = new HashMap<String, Object>();
 	private Map<String, Object> queryParams = new HashMap<String, Object>();
 	private Map<String, String> headers = new HashMap<String, String>();
 	private Object body;
@@ -85,15 +85,15 @@ public class Request {
 	}
 
 	public Map<String, Object> getRouteParams() {
-		return this.routeParams;
+		return this.pathParams;
 	}
 
-	public void addRouteParam(String key, Object value) {
-		this.routeParams.put(key, value);
+	public void addPathParam(String key, Object value) {
+		this.pathParams.put(key, value);
 	}
 
-	public void addRouteParams(Map<String, Object> routeParams) {
-		this.routeParams.putAll(routeParams);
+	public void addPathParams(Map<String, Object> routeParams) {
+		this.pathParams.putAll(routeParams);
 	}
 
 	public Map<String, Object> getQueryParams() {
