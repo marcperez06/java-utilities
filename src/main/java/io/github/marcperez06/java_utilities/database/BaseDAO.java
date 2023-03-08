@@ -75,30 +75,30 @@ public abstract class BaseDAO implements IDAO {
 	public int insert(SqlObject sqlObject) {
 		int result = -1;
 		if (this.haveAccessToDB() == true) {
-			result = this.insertInDB(sqlObject);
+			result = this.sqlInsert(sqlObject);
 		}
 		return result;
 	}
 	
-	protected abstract int insertInDB(SqlObject sqlObject);
+	protected abstract int sqlInsert(SqlObject sqlObject);
 	
 	@Override
 	public int update(SqlObject sqlObject) {
 		int result = -1;
 		if (this.haveAccessToDB() == true) {
-			result = this.updateInDB(sqlObject);
+			result = this.sqlUpdate(sqlObject);
 		}
 		return result;
 	}
 	
-	protected abstract int updateInDB(SqlObject sqlObject);
+	protected abstract int sqlUpdate(SqlObject sqlObject);
 	
 	private <T> Method getWhereConditionMethodOfPK(T pk) {
 		Method method = null;
 		if (pk != null) {
 			try {
 				Class<?> clazz = pk.getClass();
-				method = clazz.getMethod("getWhereCondition");
+				method = clazz.getDeclaredMethod("getWhereCondition");
 			} catch (NoSuchMethodException e) {
 				method = null;
 				e.printStackTrace();
@@ -137,12 +137,12 @@ public abstract class BaseDAO implements IDAO {
 	public int delete(SqlObject sqlObject) {
 		int result = -1;
 		if (this.haveAccessToDB()) {
-			result = this.deleteInDB(sqlObject);
+			result = this.sqlDelete(sqlObject);
 		}
 		return result;
 	}
 	
-	protected abstract int deleteInDB(SqlObject sqlObject);
+	protected abstract int sqlDelete(SqlObject sqlObject);
 	
 	protected <T> List<T> returnListOfData(SqlObject sqlObject, Class<T> returnClass) {
 		List<T> data = new ArrayList<T>();
@@ -189,11 +189,11 @@ public abstract class BaseDAO implements IDAO {
 	@Override
 	public void select(SqlObject sqlObject) {
 		if (this.haveAccessToDB()) {
-			this.selectInDB(sqlObject);
+			this.sqlSelect(sqlObject);
 		}
 	}
 	
-	protected abstract void selectInDB(SqlObject sqlObject);
+	protected abstract void sqlSelect(SqlObject sqlObject);
 	
 	protected <T> boolean existUsingPK(T pk) {
 		boolean exist = false;
@@ -220,12 +220,12 @@ public abstract class BaseDAO implements IDAO {
 	public boolean exist(SqlObject sqlObject) {
 		boolean result = false;
 		if (this.haveAccessToDB()) {
-			result = this.existInDB(sqlObject);
+			result = this.sqlExist(sqlObject);
 		}
 		return result;
 	}
 	
-	protected abstract boolean existInDB(SqlObject sqlObject);
+	protected abstract boolean sqlExist(SqlObject sqlObject);
 	
 	protected boolean getExistResult(String sql, SqlObject sqlObject) {
 		boolean exist = false;
@@ -275,12 +275,12 @@ public abstract class BaseDAO implements IDAO {
 	public int numRegisters(SqlObject sqlObject) {
 		int numRegisters = 0;
 		if (this.haveAccessToDB() == true) {
-			numRegisters = this.numRegistersInDB(sqlObject);
+			numRegisters = this.sqlNumRegisters(sqlObject);
 		}
 		return numRegisters;
 	}
 	
-	protected abstract int numRegistersInDB(SqlObject sqlObject);
+	protected abstract int sqlNumRegisters(SqlObject sqlObject);
 	
 	protected int getNumRegisters(String sql, SqlObject sqlObject) {
 		int numRegisters = 0;

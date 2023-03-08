@@ -93,13 +93,31 @@ public abstract class Database {
 	public ResultSet getResultSet() {
 		ResultSet resultSet = null;
 		try {
-			if (this.resultSet != null && this.resultSet.isClosed() == false) {
+			if (this.resultSet != null && this.resultSet.isClosed()) {
 				resultSet = this.resultSet;
 			}
 		} catch (SQLException e) {
 			resultSet = null;
 		}
 		return resultSet;
+	}
+	
+	private void closeResource(AutoCloseable resource) {
+		if (resource != null) {
+			try {
+				resource.close();
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			} finally {
+				if (resource != null) {
+					try {
+						resource.close();	
+					} catch (Exception e) {
+						throw new RuntimeException(e);
+					}
+				}
+			}
+		}
 	}
 
 	public int executeSQL(String sql) {
@@ -111,8 +129,8 @@ public abstract class Database {
 			
 			if (this.statement != null) {
 				success = this.statement.executeUpdate(sql);
-				this.statement.close();
-				this.connection.close();
+				this.closeResource(this.statement);
+				this.closeResource(this.connection);
 			}
 
 		} catch (Exception e) {
@@ -124,7 +142,7 @@ public abstract class Database {
 	
 	public void openConnection() {
 		try {
-			if (this.connection != null && this.connection.isClosed() == true) {
+			if (this.connection == null || this.connection.isClosed()) {
 				this.createConnection(this.url, this.user, this.password);
 			}
 		} catch (Exception e) {
@@ -132,14 +150,13 @@ public abstract class Database {
 		}
 	}
 	
+	
+	
 	public Statement createStatement() {
 		Statement st = null;
 		try {
-			if (this.connection != null) {
-				
-				if (this.statement != null) {
-					this.statement.close();
-				}
+			if (this.connection != null && !this.connection.isClosed()) {
+				this.closeResource(this.statement);
 				
 				st = this.connection.createStatement();
 			}
@@ -193,12 +210,8 @@ public abstract class Database {
 	public PreparedStatement createPreparedStatement(String sql) {
 		PreparedStatement st = null;
 		try {
-			if (this.connection != null) {
-				
-				if (this.preparedStatement != null) {
-					this.preparedStatement.close();
-				}
-				
+			if (this.connection != null && this.connection.isClosed()) {
+				this.closeResource(this.preparedStatement);
 				st = this.connection.prepareStatement(sql);
 			}
 		} catch (SQLException e) {
@@ -290,27 +303,10 @@ public abstract class Database {
 	}
 	
 	public void close() {
-		try {
-			
-			if (this.statement != null) {
-				this.statement.close();
-			}
-			
-			if (this.preparedStatement != null) {
-				this.preparedStatement.close();
-			}
-			
-			if (this.connection != null) {
-				this.connection.close();
-			}
-			
-			if (this.resultSet != null) {
-				this.resultSet.close();
-			}
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		this.closeResource(this.statement);
+		this.closeResource(this.preparedStatement);
+		this.closeResource(this.resultSet);
+		this.closeResource(this.connection);
 	}
 
 }

@@ -48,8 +48,6 @@ public abstract class BaseRestClient implements IRestClient {
 	
 	@Override
 	public File downloadFile(String url, String fileName) {
-		//DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm_ss");  
-        //LocalDateTime now = LocalDateTime.now();
 		String savePath = USER_DIR + File.separator + "downloads" + File.separator + fileName;
 		return this.downloadFile(url, fileName, savePath);
 	}

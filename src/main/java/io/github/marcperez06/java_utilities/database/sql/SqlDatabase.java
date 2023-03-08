@@ -41,6 +41,7 @@ public class SqlDatabase extends Database {
 	public SqlDatabase(Map<String, String> connectionSettings) {
 		if (this.connectionSettings.containsKey("database") && this.connectionSettings.containsKey("url")
 				&& this.connectionSettings.containsKey("user") && this.connectionSettings.containsKey("password")) {
+			
 			this.init(this.connectionSettings.get("url"), this.connectionSettings.get("database"), 
 						this.connectionSettings.get("user"), this.connectionSettings.get("password"));
 		} else {

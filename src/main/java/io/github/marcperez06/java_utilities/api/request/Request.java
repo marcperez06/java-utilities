@@ -9,6 +9,7 @@ import io.github.marcperez06.java_utilities.api.request.enums.HttpMethodEnum;
 
 public class Request {
 
+	private static final String EMPTY_URL = "";
 	private final HttpMethodEnum method;
 
 	private String url;
@@ -26,13 +27,19 @@ public class Request {
 	private boolean sendAsForm = false;
 
 	public Request(HttpMethodEnum method) {
-		this(null, method);
+		this(null, method, EMPTY_URL);
 		this.setResponseType(new ResponseTypeHolder<Void>() {});
 	}
 	
-	public Request(RequestCredentials credentials, HttpMethodEnum method) {
+	public Request(HttpMethodEnum method, String url) {
+		this(null, method, url);
+		this.setResponseType(new ResponseTypeHolder<Void>() {});
+	}
+	
+	public Request(RequestCredentials credentials, HttpMethodEnum method, String url) {
 		this.method = method;
-		setCredentials(credentials);
+		this.setCredentials(credentials);
+		this.setURL(url);
 	}
 
 	public void setCredentials(RequestCredentials credentials) {

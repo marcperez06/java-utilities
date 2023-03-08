@@ -27,7 +27,7 @@ public class MysqlDAO extends BaseDAO {
 	}
 	
 	@Override
-	protected int insertInDB(SqlObject sqlObject) {
+	protected int sqlInsert(SqlObject sqlObject) {
 		StringBuilder sqlBuilder = new StringBuilder();
 		sqlBuilder.append("INSERT INTO " + sqlObject.getTableName());
 		sqlBuilder.append("(" + sqlObject.getConcatFields() + ") VALUES");
@@ -49,7 +49,7 @@ public class MysqlDAO extends BaseDAO {
 	}
 	
 	@Override
-	protected int updateInDB(SqlObject sqlObject) {
+	protected int sqlUpdate(SqlObject sqlObject) {
 		String sql = "UPDATE " + sqlObject.getTableName();
 		sql += " SET ";
 
@@ -74,7 +74,7 @@ public class MysqlDAO extends BaseDAO {
 	}
 	
 	@Override
-	protected int deleteInDB(SqlObject sqlObject) {
+	protected int sqlDelete(SqlObject sqlObject) {
 		String sql = "DELETE " + sqlObject.getTableName();
 		sql += " WHERE 1 = 1";
 
@@ -92,7 +92,7 @@ public class MysqlDAO extends BaseDAO {
 	}
 	
 	@Override
-	protected void selectInDB(SqlObject sqlObject) {
+	protected void sqlSelect(SqlObject sqlObject) {
 		
 		String auxFields = "*";
 		if (sqlObject.haveFields() == true) {
@@ -115,7 +115,7 @@ public class MysqlDAO extends BaseDAO {
 	}
 	
 	@Override
-	protected boolean existInDB(SqlObject sqlObject) {
+	protected boolean sqlExist(SqlObject sqlObject) {
 		String sql = "SELECT COUNT(*) as exist";
 		sql += " FROM " + sqlObject.getTableName();
 		sql += " WHERE 1 = 1";
@@ -134,7 +134,7 @@ public class MysqlDAO extends BaseDAO {
 	}
 	
 	@Override
-	protected int numRegistersInDB(SqlObject sqlObject) {
+	protected int sqlNumRegisters(SqlObject sqlObject) {
 		int numRegisters = 0;
 		String sql = "SELECT COUNT(*) as numRegisters";
 		sql += " FROM " + sqlObject.getTableName();

@@ -27,7 +27,7 @@ public class MysqlDatabase extends Database {
 	public void createConnection(String url, String user, String password)
 			throws SQLException, IllegalAccessException, ClassNotFoundException, Exception {
 
-		if (super.connection == null || super.connection.isClosed() == true) {
+		if (super.connection == null || super.connection.isClosed()) {
 
 			try {
 				DriverManager.registerDriver(new com.mysql.jdbc.Driver());
