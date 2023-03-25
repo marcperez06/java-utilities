@@ -44,6 +44,14 @@ public class ListUtils {
 		return success;
 	}
 	
+	public static <T> void addObjectsInList(List<T> list, List<T> values) {
+		if (list != null) {
+			for (T value : values) {
+				addObjectInList(list, value);
+			}
+		}
+	}
+	
 	public static <T> boolean addObjectInListExceptsEmpty(List<T> list, T value) {
 		boolean success = false;
 		

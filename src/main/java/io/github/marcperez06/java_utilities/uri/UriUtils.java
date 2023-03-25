@@ -17,6 +17,19 @@ public class UriUtils {
         return uriPath;
     }
 	
+	public static String path(final String host, final String path) {
+		String completedPath = "";
+		
+		try {
+			final URI uri = new URI(host);
+			completedPath = path(uri, path);
+		} catch (Exception e) {
+			System.out.println("Can not transform host to URI");
+		}
+
+        return completedPath;
+    }
+	
 	public static String path(final URI uri, final String path) {
 		final String uriString = uri.toString();
         final StringBuilder stringBuilder = new StringBuilder(uriString);

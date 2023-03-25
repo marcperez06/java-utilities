@@ -21,12 +21,12 @@ public class SimpleGetRequestTest {
 	
 	@Test
 	public void simpleGetRequestTest() {
-		Request request = new Request(HttpMethodEnum.GET, "https://datos.gob.es/apidata/catalog/dataset");
-		request.setResponseType(new ResponseTypeHolder<String>() {});
+		String url = "https://datos.gob.es/apidata/catalog/dataset";
+		Request request = new Request(HttpMethodEnum.GET, url);
 		this.printResponse(api.send(request));
 	}
 	
-	private void printResponse(Response<String> response) {
+	private void printResponse(Response<Void> response) {
 		if (response.isSuccess()) {
 			String body = response.getOriginalBody();
 			System.out.println(body);

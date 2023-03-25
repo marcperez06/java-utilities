@@ -364,7 +364,7 @@ public class FileUtils {
 			
 			try (BufferedWriter bufferedWritter = createWriter(path)){
 				
-				bufferedWritter.write(txt);;
+				bufferedWritter.write(txt);
 				write = true;
 
 			} catch (Exception e) {

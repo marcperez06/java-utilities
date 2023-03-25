@@ -15,21 +15,31 @@ public class GsonUtils {
 	
 	private GsonUtils() {}
 	
+	private static GsonBuilder getGsonBuilder(String dateFormat, boolean pretty) {
+		GsonBuilder builder = new GsonBuilder();
+		
+		if (dateFormat != null) {
+			builder.setDateFormat(dateFormat);
+		}
+		
+		if (pretty) {
+			builder.setPrettyPrinting();
+		}
+		
+		return builder;
+	}
+	
 	private static Gson createGson(String type, String dateFormat) {
+		return createGson(type, dateFormat, false);
+	}
+	
+	private static Gson createGson(String type, String dateFormat, boolean pretty) {
 		Gson gson = null;
 		
 		if (type.equals(ESCAPING_HTML)) {
-			if (dateFormat != null) {
-				gson = new GsonBuilder().setDateFormat(dateFormat).create();
-			} else {
-				gson = new Gson();
-			}
+			gson = getGsonBuilder(dateFormat, pretty).create();
 		} else if (type.equals(NOT_ESCAPING_HTML)) {
-			if (dateFormat != null) {
-				gson = new GsonBuilder().setDateFormat(dateFormat).disableHtmlEscaping().create();
-			} else {
-				gson = new GsonBuilder().disableHtmlEscaping().create();
-			}
+			gson = getGsonBuilder(dateFormat, pretty).disableHtmlEscaping().create();
 		} else {
 			gson = new Gson();
 		}
@@ -238,4 +248,39 @@ public class GsonUtils {
 		}
 		return json;
 	}
+	
+	/**
+	 * Return the object in JSON format
+	 * @param <T> - Generic type of object
+	 * @param obj - Object of generic type
+	 * @return The object in JSON format with all properties - String (Example: { name : "example", id : 1 })
+	 */
+	public static <T> String getPrettyJSON(T obj) {
+		return getPrettyJSON(obj, null);
+	}
+	
+	/**
+	 * Return the object in JSON format, and transform the date values in format specified 
+	 * @param <T> - Generic type of object
+	 * @param obj - Object of generic type
+	 * @param dateFormat - String date format
+	 * @return The object in JSON format with all properties - String (Example: { name : "example", id : 1 }) 
+	 */
+	public static <T> String getPrettyJSON(T obj, String dateFormat) {
+		String json = "";
+		try {
+			boolean isInstanceOfString = (obj instanceof String);
+			if (obj != null && !isInstanceOfString) {
+				Gson gson = createGson(NOT_ESCAPING_HTML, dateFormat, true);
+				json = gson.toJson(obj);
+			} else if (obj != null && isInstanceOfString) {
+				json = (String) obj;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			json = "";
+		}
+		return json;
+	}
+	
 }

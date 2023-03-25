@@ -67,9 +67,13 @@ public class ValidationUtils {
 		return areEquals;
 	}
 	
+	public static boolean equalsIgnoreCase(String a, String b) {
+		return equalsLowerCase(a, b);
+	}
+	
 	public static boolean equalsLowerCase(String a, String b) {
-		String lowerA = a.toLowerCase();
-		String lowerB = b.toLowerCase();
+		String lowerA = (a != null) ? a.toLowerCase() : null;
+		String lowerB = (b != null) ? b.toLowerCase() : null;
 		return equals(lowerA, lowerB);
 	}
 	
