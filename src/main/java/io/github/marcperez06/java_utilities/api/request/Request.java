@@ -24,7 +24,7 @@ public class Request {
 	private RequestCredentials credentials;
 	private boolean useCredentials;
 	private boolean useBearerToken;
-	private boolean sendAsForm = false;
+	private boolean sendAsForm;
 
 	public Request(HttpMethodEnum method) {
 		this(null, method, EMPTY_URL);
@@ -38,6 +38,7 @@ public class Request {
 	
 	public Request(RequestCredentials credentials, HttpMethodEnum method, String url) {
 		this.method = method;
+		this.sendAsForm = false;
 		this.setCredentials(credentials);
 		this.setURL(url);
 	}

@@ -36,8 +36,7 @@ public class ValidationUtils {
 		} else if (objB != null) {
 			areEquals = equalsInherentOfClass(objB, objA);
 		} else {
-			areEquals = (objA == null);
-			areEquals &= (objB == null);
+			areEquals = true;
 		}
 		
 		return areEquals;

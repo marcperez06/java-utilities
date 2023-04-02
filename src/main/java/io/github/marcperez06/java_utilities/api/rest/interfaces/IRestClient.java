@@ -19,6 +19,7 @@ public interface IRestClient {
     public void disableCertificate();
     public void useProxy();
     public void disableProxy();
+    public void cookieManagement(boolean cookieManagement);
     public <T> Response<T> send(Request request);
     public File downloadFile(String url);
     public File downloadFile(String url, String fileName);

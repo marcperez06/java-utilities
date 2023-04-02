@@ -21,12 +21,14 @@ public abstract class BaseRestClient implements IRestClient {
 	
 	protected boolean useCertificate;
     protected boolean useProxy;
+    protected boolean cookieManagement;
     protected Optional<String> certificateFilePath;
     protected Optional<String> certificateFilePassword;
 
 	public BaseRestClient() {
 		this.useCertificate = false;
     	this.useProxy = false;
+    	this.cookieManagement = true;
     	this.certificateFilePath = Optional.empty();
     	this.certificateFilePassword = Optional.empty();
 	}

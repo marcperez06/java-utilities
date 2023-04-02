@@ -81,6 +81,20 @@ public class UnirestClient extends BaseRestClient {
         super.useProxy = false;
         this.resetConfiguration();
     }
+    
+    @Override
+    public void cookieManagement(boolean cookieManagement) {
+    	super.cookieManagement = cookieManagement;
+    	Unirest.config().enableCookieManagement(cookieManagement);
+    }
+    
+    public void disableCookieManagement() {
+    	this.cookieManagement(false);
+    }
+    
+    public void enableCookieManagement() {
+    	this.cookieManagement(true);
+    }
 
     public void setObjectMapper(ObjectMapper mapper) {
         this.objectMapper = mapper;
@@ -95,12 +109,16 @@ public class UnirestClient extends BaseRestClient {
     private void resetConfiguration() {
         Unirest.shutDown();
         Unirest.config().setObjectMapper(this.objectMapper);
+        
         if (super.useCertificate) {
-            useCertificate();
+            this.useCertificate();
         }
+        
         if (super.useProxy) {
-            useProxy();
+            this.useProxy();
         }
+        
+        this.cookieManagement(super.cookieManagement);
     }
 
     @Override
