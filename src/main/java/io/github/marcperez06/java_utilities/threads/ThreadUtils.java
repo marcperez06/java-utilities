@@ -13,7 +13,7 @@ public class ThreadUtils {
 	
 	/**
 	 * Create Thread pool of size specified
-	 * @param int - pool size
+	 * @param size int - pool size
 	 */
 	public static void createPool(int size) {
 		poolSize = size;
