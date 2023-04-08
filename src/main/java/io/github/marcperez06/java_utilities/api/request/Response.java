@@ -9,6 +9,7 @@ public class Response<T> extends ResponseTypeHolder<T> {
 	public static final int ACCEPTED = 202;
 	public static final int UNAUTHORIZED = 401;
 	public static final int BAD_REQUEST = 400;
+	public static final int FORBIDDEN = 403;
 	public static final int NOT_FOUND = 404;
 	public static final int SERVER_ERROR = 500;
 
@@ -152,6 +153,14 @@ public class Response<T> extends ResponseTypeHolder<T> {
 	 */
 	public boolean isBadRequest() {
 		return this.statusCodeIs(BAD_REQUEST);
+	}
+	
+	/**
+	 * Return 'true' is the response status is forbidden (status = 403), returns 'false' otherwise.
+	 * @return boolean - true if status is forbidden, false otherwise
+	 */
+	public boolean isForbidden() {
+		return this.statusCodeIs(FORBIDDEN);
 	}
 	
 	/**

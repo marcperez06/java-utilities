@@ -5,6 +5,12 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Properties;
 
+/**
+ * Class that allow load properties using the properties file name or file path
+ * -- Default directory used is ---> "{user.dir}\resources\properties"
+ * 
+ * @author Marc Perez Rodriguez
+ */
 public class EnvironmentProperties {
 
 private static final String FILE_SEPARATOR = System.getProperty("file.separator");
@@ -14,12 +20,17 @@ private static final String FILE_SEPARATOR = System.getProperty("file.separator"
 	private String propertiesFileName;
 	private Properties properties;
 
-	public EnvironmentProperties(String propertiesFileName) {
+	public EnvironmentProperties() {
 		this.defaultDirectoryOfProperties = System.getProperty("user.dir") + FILE_SEPARATOR + "resources";
 		this.defaultDirectoryOfProperties += FILE_SEPARATOR + "properties";
 		this.directoryOfProperties = "";
-		this.propertiesFileName = propertiesFileName;
 		this.properties = new Properties();
+	}
+	
+	public EnvironmentProperties(String propertiesFileName) {
+		this();
+		this.propertiesFileName = propertiesFileName;
+		
 	}
 	
 	public EnvironmentProperties(String directoryOfProperties, String propertiesFileName) {
@@ -62,7 +73,7 @@ private static final String FILE_SEPARATOR = System.getProperty("file.separator"
 			this.loadProperties(this.directoryOfProperties);
 		} else {
 			this.loadProperties(this.defaultDirectoryOfProperties);
-			this.loadProperties(this.directoryOfProperties);	
+			this.loadProperties(this.directoryOfProperties);
 		}
 	}
 	
@@ -73,16 +84,23 @@ private static final String FILE_SEPARATOR = System.getProperty("file.separator"
 
 		if (canLoadProperties) {
 			
-			String path = directoryPath + FILE_SEPARATOR + this.propertiesFileName + ".properties";
-
-			try {
-				this.loadProperty(this.properties, path);
-			} catch(Exception e) {
-				e.printStackTrace();
+			if (!this.propertiesFileName.endsWith(".properties")) {
+				this.propertiesFileName += ".properties";
 			}
+			
+			String path = directoryPath + FILE_SEPARATOR + this.propertiesFileName;
+			this.loadPropertiesFromFile(path);
 
 		}
 
+	}
+	
+	public void loadPropertiesFromFile(String filePath) {
+		try {
+			this.loadProperty(this.properties, filePath);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private void loadProperty(Properties prop, String path) throws FileNotFoundException {
@@ -141,6 +159,7 @@ private static final String FILE_SEPARATOR = System.getProperty("file.separator"
 
 		}
 		
+		property = (property != null) ? property.trim() : null;
 		return property;
 	}
 	
@@ -191,6 +210,28 @@ private static final String FILE_SEPARATOR = System.getProperty("file.separator"
 		if (prop != null && key != null && value != null) {
 			prop.setProperty(key, value);
 		}
+	}
+	
+	// -------------- GET PROPERTIES AS <TYPE> ---------------
+	
+	public Integer getPropertyAsInteger(String key) {
+		return Integer.valueOf(this.getProperty(key));
+	}
+	
+	public Float getPropertyAsFloat(String key) {
+		return Float.valueOf(this.getProperty(key));
+	}
+	
+	public Double getPropertyAsDouble(String key) {
+		return Double.valueOf(this.getProperty(key));
+	}
+	
+	public Long getPropertyAsLong(String key) {
+		return Long.valueOf(this.getProperty(key));
+	}
+	
+	public Boolean getPropertyAsBoolean(String key) {
+		return Boolean.valueOf(this.getProperty(key));
 	}
 	
 }
