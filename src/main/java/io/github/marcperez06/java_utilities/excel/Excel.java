@@ -70,10 +70,6 @@ public class Excel {
 			this.workbook = null;
 			e.printStackTrace();
 			Logger.error(e.getMessage());
-		} catch (InvalidFormatException e) {
-			this.workbook = null;
-			e.printStackTrace();
-			Logger.error(e.getMessage());
 		} catch (IOException e) {
 			this.workbook = null;
 			e.printStackTrace();
@@ -255,7 +251,7 @@ public class Excel {
 		
 		if (cell != null) {
 		
-		    switch (cell.getCellTypeEnum()) {
+		    switch (cell.getCellType()) {
 		        case BOOLEAN:
 		            value = (T) Boolean.valueOf(cell.getBooleanCellValue());
 		            break;
@@ -267,7 +263,7 @@ public class Excel {
 		                value = (T) cell.getDateCellValue();
 		            } else {
 		                //value = (T) new Double(cell.getNumericCellValue());
-		            	cell.setCellType(CellType.STRING);
+		            	//cell.setCellType(CellType.STRING);
 		                value = (T) cell.getRichStringCellValue().getString();
 		            }
 		            break;

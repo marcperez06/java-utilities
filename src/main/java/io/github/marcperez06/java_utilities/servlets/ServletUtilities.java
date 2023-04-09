@@ -1,6 +1,6 @@
 package io.github.marcperez06.java_utilities.servlets;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 public class ServletUtilities {
 	
