@@ -232,7 +232,7 @@ public abstract class Database {
 	/**
 	 * Execute prepared sql to database
 	 * @param sql String - prepared sql to execute
-	 * @param parameters List<Object> - parameters to fill prepared sql
+	 * @param parameters List&lt;Object&gt; - parameters to fill prepared sql
 	 * @return rows affected - int
 	 */
 	public int executePreparedSQL(String sql, List<Object> parameters) {
@@ -282,7 +282,7 @@ public abstract class Database {
 	/**
 	 * Execute prepared query to database
 	 * @param sql String - prepared sql to execute
-	 * @param parameters List<Object> - parameters to fill prepared sql
+	 * @param parameters List&lt;Object&gt; - parameters to fill prepared sql
 	 */
 	public void executePreparedQuery(String sql, List<Object> parameters) {
 		try {

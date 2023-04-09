@@ -7,7 +7,7 @@ import java.util.Properties;
 
 /**
  * Class that allow load properties using the properties file name or file path
- * -- Default directory used is ---> "{user.dir}\resources\properties"
+ * -- Default directory used is ---&gt; "{user.dir}\resources\properties"
  * 
  * @author Marc Perez Rodriguez
  */
