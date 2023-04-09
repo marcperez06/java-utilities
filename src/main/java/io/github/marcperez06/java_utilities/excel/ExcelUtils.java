@@ -61,7 +61,7 @@ public class ExcelUtils {
 	 *         whatever the original type was).
 	 */
 	public String getCellValue(Cell cell) {
-		switch (cell.getCellTypeEnum()) {
+		switch (cell.getCellType()) {
 			case STRING:
 				return cell.getRichStringCellValue().getString();
 			case NUMERIC:
