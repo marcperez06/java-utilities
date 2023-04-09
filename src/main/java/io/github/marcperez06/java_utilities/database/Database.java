@@ -47,26 +47,44 @@ public abstract class Database {
 		this.close();
 	}
 	
+	/**
+	 * @return url - string
+	 */
 	public String getUrl() {
-		return this.user;
+		return this.url;
 	}
 	
+	/**
+	 * @param url string - url
+	 */
 	public void setUrl(String url) {
 		this.url = url;
 	}
 	
+	/**
+	 * @return user - string
+	 */
 	public String getUser() {
 		return this.user;
 	}
 	
+	/**
+	 * @param user string - database user
+	 */
 	public void setUser(String user) {
 		this.user = user;
 	}
 	
+	/**
+	 * @return password - string
+	 */
 	public String getPassword() {
 		return this.password;
 	}
 	
+	/**
+	 * @param password string - database password
+	 */
 	public void setPassword(String password) {
 		this.password = password;
 	}
@@ -74,22 +92,37 @@ public abstract class Database {
 	public abstract void createConnection(String url, String user, String password) 
 									throws SQLException, IllegalAccessException, ClassNotFoundException, Exception;
 	
+	/**
+	 * @return connection - Connection
+	 */
 	public Connection getConnection() {
 		return this.connection;
 	}
 
+	/**
+	 * @param connection Connection - connection
+	 */
 	public void setConnection(Connection connection) {
 		this.connection = connection;
 	}
 	
+	/**
+	 * @return Statement - statement
+	 */
 	public Statement getStatement() {
 		return this.statement;
 	}
 	
+	/**
+	 * @return PreparedStatement - prepared statement
+	 */
 	public PreparedStatement getPreparedStatement() {
 		return this.preparedStatement;
 	}
 	
+	/**
+	 * @return ResultSet - result set
+	 */
 	public ResultSet getResultSet() {
 		ResultSet resultSet = null;
 		try {
@@ -120,6 +153,11 @@ public abstract class Database {
 		}
 	}
 
+	/**
+	 * Execute sql in database
+	 * @param sql String - sql to execute
+	 * @return rows affected - int
+	 */
 	public int executeSQL(String sql) {
 		int success = 0;
 		try {
@@ -140,6 +178,9 @@ public abstract class Database {
 		return success;
 	}
 	
+	/**
+	 * Opens the connection with database
+	 */
 	public void openConnection() {
 		try {
 			if (this.connection == null || this.connection.isClosed()) {
@@ -150,8 +191,10 @@ public abstract class Database {
 		}
 	}
 	
-	
-	
+	/**
+	 * Creates a Statement
+	 * @return statement - Statement
+	 */
 	public Statement createStatement() {
 		Statement st = null;
 		try {
@@ -167,6 +210,10 @@ public abstract class Database {
 		return st;
 	}
 	
+	/**
+	 * Execute a query to database
+	 * @param sql String - sql to execute
+	 */
 	public void executeQuery(String sql) {
 		try {
 
@@ -182,6 +229,12 @@ public abstract class Database {
 		}
 	}
 	
+	/**
+	 * Execute prepared sql to database
+	 * @param sql String - prepared sql to execute
+	 * @param parameters List<Object> - parameters to fill prepared sql
+	 * @return rows affected - int
+	 */
 	public int executePreparedSQL(String sql, List<Object> parameters) {
 		int success = 0;
 		try {
@@ -207,7 +260,12 @@ public abstract class Database {
 		return success;
 	}
 	
-	public PreparedStatement createPreparedStatement(String sql) {
+	/**
+	 * Creates a prepared Statement with the sql specified
+	 * @param sql String - sql to execute
+	 * @return preparedStatement - PreparedStatement
+	 */
+	private PreparedStatement createPreparedStatement(String sql) {
 		PreparedStatement st = null;
 		try {
 			if (this.connection != null && this.connection.isClosed()) {
@@ -221,6 +279,11 @@ public abstract class Database {
 		return st;
 	}
 	
+	/**
+	 * Execute prepared query to database
+	 * @param sql String - prepared sql to execute
+	 * @param parameters List<Object> - parameters to fill prepared sql
+	 */
 	public void executePreparedQuery(String sql, List<Object> parameters) {
 		try {
 			
@@ -302,6 +365,9 @@ public abstract class Database {
 		}
 	}
 	
+	/**
+	 * Close statement, prepared statement, result set and connection
+	 */
 	public void close() {
 		this.closeResource(this.statement);
 		this.closeResource(this.preparedStatement);
