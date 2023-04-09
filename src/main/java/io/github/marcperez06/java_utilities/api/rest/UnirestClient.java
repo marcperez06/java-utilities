@@ -133,7 +133,7 @@ public class UnirestClient extends BaseRestClient {
         	this.addRequestParams(unirestRequest, request);
 			
 			if (request.noResponseObjectNeeded()) {
-	            unirestResponse = unirestRequest.asEmpty();
+	            unirestResponse = (HttpResponse<T>) unirestRequest.asEmpty();
 	        } else {
 	            unirestResponse = unirestRequest.asObject(new RestGenericObject<T>(request.getResponseType()));
 	        }
