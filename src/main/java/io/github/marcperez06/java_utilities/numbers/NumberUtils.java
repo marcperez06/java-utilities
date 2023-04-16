@@ -98,7 +98,7 @@ public class NumberUtils {
 	}
 	
 	/**
-	 * Format number to european format with 2 decimals
+	 * Format number as European format with 2 decimals
 	 * @param number - double
 	 * @return String - number formatted
 	 */
@@ -107,7 +107,7 @@ public class NumberUtils {
 	}
 
 	/**
-	 * Format number to european format with decimals specified
+	 * Format number as European format with decimals specified
 	 * @param number - double
 	 * @param decimals - int decimals wished
 	 * @return String - number formatted
@@ -121,7 +121,7 @@ public class NumberUtils {
 	}
 	
 	/**
-	 * Format number to american format with 2 decimals
+	 * Format number as American format with 2 decimals
 	 * @param number - double
 	 * @return String - number formatted
 	 */
@@ -130,7 +130,7 @@ public class NumberUtils {
 	}
 
 	/**
-	 * Format number to american format with decimals specified
+	 * Format number as American format with decimals specified
 	 * @param number - double
 	 * @param decimals - int decimals wished
 	 * @return String - number formatted
@@ -141,6 +141,56 @@ public class NumberUtils {
 		formatter.setMaximumFractionDigits(decimals);
 		String numberFormatted = formatter.format(number);
 		return numberFormatted;
+	}
+	
+	/**
+	 * a == b
+	 * @param a - Number
+	 * @param b - Number
+	 * @return boolean - true if are equals, false otherwise
+	 */
+	public static boolean areEquals(Number a, Number b) {
+		return (a != null && b != null) ? a.doubleValue() == b.doubleValue() : false;
+	}
+	
+	/**
+	 * a > b
+	 * @param a - Number
+	 * @param b - Number
+	 * @return boolean - true if a > b, false otherwise
+	 */
+	public static boolean isBigger(Number a, Number b) {
+		return (a != null && b != null) ? a.doubleValue() > b.doubleValue() : false;
+	}
+	
+	/**
+	 * a >= b
+	 * @param a - Number
+	 * @param b - Number
+	 * @return boolean - true if a >= b, false otherwise
+	 */
+	public static boolean isBiggerOrEqual(Number a, Number b) {
+		return (a != null && b != null) ? a.doubleValue() >= b.doubleValue() : false;
+	}
+	
+	/**
+	 * a &lt; b
+	 * @param a - Number
+	 * @param b - Number
+	 * @return boolean - true if a &lt; b, false otherwise
+	 */
+	public static boolean isLower(Number a, Number b) {
+		return (a != null && b != null) ? a.doubleValue() < b.doubleValue() : false;
+	}
+	
+	/**
+	 * a &lt;= b
+	 * @param a - Number
+	 * @param b - Number
+	 * @return boolean - true if a &lt;= b, false otherwise
+	 */
+	public static boolean isLowerOrEqual(Number a, Number b) {
+		return (a != null && b != null) ? a.doubleValue() <= b.doubleValue() : false;
 	}
 
 }

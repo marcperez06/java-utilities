@@ -1,8 +1,3 @@
-/**
- * @author Juan Alvarez Calixto
- * @author Marc Pérez Rodriguez
- */
-
 package io.github.marcperez06.java_utilities.validation;
 
 import java.lang.reflect.Array;
@@ -15,6 +10,10 @@ import java.util.regex.Pattern;
 import io.github.marcperez06.java_utilities.collection.array.ArrayUtils;
 import io.github.marcperez06.java_utilities.reflection.ReflectionUtils;
 
+/**
+ * Class that have methods for do validations
+ * @author Marc Pérez Rodriguez
+ */
 public class ValidationUtils {
 
 	public static final String REGEX_EMAIL = "^[A-Za-z](.*)([@]{1})(.{1,})(\\.)(.{1,})";
@@ -163,7 +162,14 @@ public class ValidationUtils {
 		return isEmpty;
 	}
 	
-	public static <T> boolean haveMinimumLength(T obj, int length) {
+	/**
+	 * Return true if object have lower or equals size than parameter specified, false otherwise
+	 * @param <T> - Generic type of object
+	 * @param obj - Object received
+	 * @param length - int to check
+	 * @return boolean - true is object have lower or equal size, false otherwise
+	 */
+	public static <T> boolean haveLowerOrEqualLength(T obj, int length) {
 		boolean haveMinimum = false;
 		
 		try {
@@ -192,7 +198,14 @@ public class ValidationUtils {
 		return haveMinimum;
 	}
 	
-	public static <T> boolean haveMaxLength(T obj, int length) {
+	/**
+	 * Return true if object have bigger or equals size than parameter specified, false otherwise
+	 * @param <T> - Generic type of object
+	 * @param obj - Object received
+	 * @param length - int to check
+	 * @return boolean - true is object have bigger or equal size, false otherwise
+	 */
+	public static <T> boolean haveBiggerOrEqualLength(T obj, int length) {
 		boolean haveMax = false;
 		
 		try {
@@ -221,7 +234,15 @@ public class ValidationUtils {
 		return haveMax;
 	}
 	
-	public static <T> boolean isBetweenLength(T obj, int min, int max) {
+	/**
+	 * Return true if object is between or equals size than parameter specified, false otherwise
+	 * @param <T> - Generic type of object
+	 * @param obj - Object received
+	 * @param min - int minimal number to check
+	 * @param max - int max number to check
+	 * @return boolean - true is object is between min and max, false otherwise
+	 */
+	public static <T> boolean isBetweenOrEqualLength(T obj, int min, int max) {
 		boolean isBetween = false;
 		
 		try {
@@ -388,25 +409,6 @@ public class ValidationUtils {
 		return canVerifyTheModifications;
 	}
 
-	/**
-	 * Validate if exist the object inside array
-	 * @param <T> - Generic type of object
-	 * @param array - Array of objects of type T
-	 * @param value - Object of type T
-	 * @return boolean - true if object exist in array, false otherwise
-	 */
-	/*
-	public static <T> boolean existObjectInArray(T[] array, T value) {
-		boolean exist = false;
-		if (array != null) {
-			for (int i = 0; i < array.length && exist == false; i++) {
-				exist = equals(array[i], value);
-			}
-		}
-		return exist;
-	}
-	*/
-
 	private static <T> boolean fieldValueIsNotEqual(Field field, T objA, T objB) {
 		return !fieldValueIsEqual(field, objA, objB);
 	}
@@ -422,39 +424,6 @@ public class ValidationUtils {
 		}
 		return isEqual;
 	}
-	
-	/**
-	 * Validate if exist the object inside list
-	 * @param <T> - Generic type of object
-	 * @param list - List of objects of type T
-	 * @param value - Object of type T
-	 * @return boolean - true if object exist in list, false otherwise
-	 */
-	/*
-	public static <T> boolean existObjectInList(List<T> list, T value) {
-		boolean exist = false;
-		for (int i = 0; i < list.size() && exist == false; i++) {
-			if (equals(list.get(i), value) == true) {
-				exist = true;
-			}
-		}
-		return exist;
-	}
-	*/
-	
-	/**
-	 * Validate if exist the key inside map.
-	 * @param <T> - Generic type of object
-	 * @param <S> - Generic type of object
-	 * @param map - Map&lt;T, S&gt;
-	 * @param key - Key inside map of type T
-	 * @return boolean - true if the map contains the key, false otherwise
-	 */
-	/*
-	public static <T, S> boolean existObjectInMap(Map<T, S> map, T key) {
-		return map.containsKey(key);
-	}
-	*/
 
 	/**
 	 * Return true if the object is of the type specified, false otherwise

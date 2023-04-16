@@ -26,7 +26,6 @@ import kong.unirest.Unirest;
 import kong.unirest.gson.GsonObjectMapper;
 
 public class UnirestClient extends BaseRestClient {
-    private static final Log log = LogFactory.getLog(UnirestClient.class);
 
     protected Optional<Proxy> proxy;
     private ObjectMapper objectMapper;
@@ -164,7 +163,6 @@ public class UnirestClient extends BaseRestClient {
 	            unirestRequest = Unirest.delete(request.getUrl());
 	            break;
 	        default:
-	            log.debug(request);
 	            throw new RestClientException("Unable to determine HttpMethod for Request");
 	    }
     	return unirestRequest;

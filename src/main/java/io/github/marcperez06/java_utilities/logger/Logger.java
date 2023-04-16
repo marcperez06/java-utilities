@@ -17,14 +17,25 @@ public class Logger {
 	
 	private Logger() {}
 	
-	public static void print(String message) {
-		String date = getCurrentTime();
-		System.out.print("- " + date + " --> " + message);
+	/**
+	 * Only print messages if the System property "java.utilities.debug.messages.enabled" is defined as "true" in String format
+	 * @param message - String
+	 */
+	public static void debug(String message) {
+		String property = "java.utilities.debug.messages.enabled";
+		boolean debugMessagesEnabled = System.getProperty(property) != null && System.getProperty(property).equals("true");
+		if (debugMessagesEnabled) {
+			System.out.println(message);	
+		}
 	}
 	
+	/**
+	 * Print message and the current date time, only if debug messages are enabled "java.utilities.debug.messages.enabled='true'"
+	 * @param message - String
+	 */
 	public static void println(String message) {
 		String date = getCurrentTime();
-		System.out.println("- " + date + " --> " + message);
+		debug("- " + date + " --> " + message);
 	}
 	
 	private static void printStartEnd() {
@@ -68,6 +79,10 @@ public class Logger {
 		return date;
 	}
 	
+	/**
+	 * Print Action message and stack trace, only if debug messages are enabled "java.utilities.debug.messages.enabled='true'"
+	 * @param message - String
+	 */
 	public static void action(String message) {
 		printStackTraceInfo();
 		println(ACTION);
@@ -75,6 +90,10 @@ public class Logger {
 		printStartEnd();
 	}
 	
+	/**
+	 * Print Error message and stack trace, only if debug messages are enabled "java.utilities.debug.messages.enabled='true'"
+	 * @param message - String
+	 */
 	public static void error(String message) {
 		printStartEnd();
 		println(ERROR);
