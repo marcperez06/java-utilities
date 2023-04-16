@@ -4,7 +4,7 @@
 
 	<groupId>io.github.marcperez06</groupId>
 	<artifactId>java-utilities</artifactId>
-	<version>0.0.9</version>
+	<version>0.0.10</version>
 	<packaging>jar</packaging>
 
 	<name>java-utilities</name>
@@ -50,6 +50,7 @@
 		<javax.activation>1.1.1</javax.activation>
 		<unirest.version>3.14.2</unirest.version>
 		<jakarta.version>5.0.0</jakarta.version>
+		<logging.version>1.2</logging.version>
 	</properties>
 
 	<dependencies>
@@ -149,6 +150,12 @@
 			<groupId>com.konghq</groupId>
 			<artifactId>unirest-object-mappers-gson</artifactId>
 			<version>${unirest.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>${logging.version}</version>
 		</dependency>
 
 		<!-- *********** SERVLET DEPENDENCIES *********** -->

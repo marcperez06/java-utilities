@@ -8,9 +8,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import io.github.marcperez06.java_utilities.api.request.Request;
 import io.github.marcperez06.java_utilities.api.request.RequestProxy;
 import io.github.marcperez06.java_utilities.api.request.Response;
