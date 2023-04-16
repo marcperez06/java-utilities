@@ -154,20 +154,20 @@ public class NumberUtils {
 	}
 	
 	/**
-	 * a > b
+	 * a &gt; b
 	 * @param a - Number
 	 * @param b - Number
-	 * @return boolean - true if a > b, false otherwise
+	 * @return boolean - true if a &gt; b, false otherwise
 	 */
 	public static boolean isBigger(Number a, Number b) {
 		return (a != null && b != null) ? a.doubleValue() > b.doubleValue() : false;
 	}
 	
 	/**
-	 * a >= b
+	 * a &gt;= b
 	 * @param a - Number
 	 * @param b - Number
-	 * @return boolean - true if a >= b, false otherwise
+	 * @return boolean - true if a &gt;= b, false otherwise
 	 */
 	public static boolean isBiggerOrEqual(Number a, Number b) {
 		return (a != null && b != null) ? a.doubleValue() >= b.doubleValue() : false;
