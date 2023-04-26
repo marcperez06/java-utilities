@@ -30,10 +30,27 @@ public class Logger {
 	}
 	
 	/**
-	 * Print message and the current date time, only if debug messages are enabled "java.utilities.debug.messages.enabled='true'"
+	 * Print message using System.out.println()
 	 * @param message - String
 	 */
 	public static void println(String message) {
+		System.out.println(message);
+	}
+	
+	/**
+	 * Print message and the current date time
+	 * @param message - String
+	 */
+	public static void forceLog(String message) {
+		String date = getCurrentTime();
+		println("- " + date + " --> " + message);
+	}
+	
+	/**
+	 * Print message and the current date time, only if debug messages are enabled "java.utilities.debug.messages.enabled='true'"
+	 * @param message - String
+	 */
+	public static void log(String message) {
 		String date = getCurrentTime();
 		debug("- " + date + " --> " + message);
 	}
@@ -44,7 +61,7 @@ public class Logger {
 	
 	private static void printDate() {
 		String date = getCurrentTime();
-		println("---- Log registred: " + date + " ----");
+		log("---- Log registred: " + date + " ----");
 	}
 	
 	private static void printStackTraceInfo() {
@@ -56,11 +73,11 @@ public class Logger {
 			String className = stackTrace.getClassName();
 			String fileName = stackTrace.getFileName();
 			
-			println(START_STACK_TRACE_INFORMATION);
-			println(FILE_NAME + fileName);
-			println(CLASS_NAME + className);
-			println(METHOD_NAME + methodName);
-			println(END_STACK_TRACE_INFORMATION);
+			log(START_STACK_TRACE_INFORMATION);
+			log(FILE_NAME + fileName);
+			log(CLASS_NAME + className);
+			log(METHOD_NAME + methodName);
+			log(END_STACK_TRACE_INFORMATION);
 		}
 		
 	}
@@ -85,19 +102,20 @@ public class Logger {
 	 */
 	public static void action(String message) {
 		printStackTraceInfo();
-		println(ACTION);
-		println(message);
+		log(ACTION);
+		log(message);
 		printStartEnd();
 	}
 	
 	/**
-	 * Print Error message and stack trace, only if debug messages are enabled "java.utilities.debug.messages.enabled='true'"
+	 * Print Error message and stack trace, 
+	 * only print stack trace if debug messages are enabled "java.utilities.debug.messages.enabled='true'"
 	 * @param message - String
 	 */
 	public static void error(String message) {
 		printStartEnd();
-		println(ERROR);
-		println(message);
+		forceLog(ERROR);
+		forceLog(message);
 		printStartEnd();
 	}
 

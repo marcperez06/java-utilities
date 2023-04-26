@@ -79,7 +79,7 @@ public abstract class BaseRestClient implements IRestClient {
 			if (writeFile) {
 				file = new File(savePath);
 			} else {
-				Logger.println("Can not download the file from url: " + url);
+				Logger.log("Can not download the file from url: " + url);
 			}
 
 		} catch (Exception e) {

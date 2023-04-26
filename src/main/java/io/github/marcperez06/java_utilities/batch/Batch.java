@@ -128,18 +128,18 @@ public class Batch {
 		this.currentApplication = Runtime.getRuntime();
 		
 		if (command != null && !command.isEmpty()) {
-			Logger.println("Command to execute --> " + command);
+			Logger.log("Command to execute --> " + command);
 
 	        try {
-	        	Logger.println("Starting command");
+	        	Logger.log("Starting command");
 	        	this.currentProcess = this.currentApplication.exec(command);
-	        	Logger.println("Finishing command");
+	        	Logger.log("Finishing command");
 	        	
 	        } catch(Exception e) {
 	        	e.printStackTrace();
 	        }
 		} else {
-			Logger.println("The command is empty or null");
+			Logger.log("The command is empty or null");
 		}
 
 	}
@@ -162,7 +162,7 @@ public class Batch {
 			if (this.currentProcess != null) {
 				result = this.currentProcess.waitFor();
 				
-				Logger.println("------ wait for ....");
+				Logger.log("------ wait for ....");
 			}
 
 		} catch (InterruptedException e) {
@@ -184,7 +184,7 @@ public class Batch {
 		try {
 			int exitValue = this.currentProcess.exitValue();
 			
-			Logger.println("Exit Value: " + exitValue);
+			Logger.log("Exit Value: " + exitValue);
 			
 			haveExitValue = (exitValue > Integer.MIN_VALUE && exitValue < Integer.MAX_VALUE);
 			

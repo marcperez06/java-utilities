@@ -1,14 +1,17 @@
 /**
  * @author Marc Perez Rodriguez
- * Class used to store and reuse date.
+ * Class used to store and reuse data.
  * Example:
  *  - Normally use it when I want to store data and use it in other Gherkin sentences. For Testing propose
+ *  - Can be used as cache for pass data between diferent classes
  */
 package io.github.marcperez06.java_utilities.testdata;
 
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
+
+import io.github.marcperez06.java_utilities.logger.Logger;
 
 public class DataCollector {
 
@@ -31,7 +34,7 @@ public class DataCollector {
 			cleanedKey = cleanedKey.toLowerCase();
 			
 		} else {
-			System.out.println("Can not use an empty or null key, review your code");
+			Logger.error("Can not use an empty or null key, review your code");
 		}
 		
 		return cleanedKey;
@@ -60,7 +63,16 @@ public class DataCollector {
 	public static synchronized void setData(String key, Object value) {
 		key = cleanKey(key);
 		data.put(key, value);
-		System.out.println("Added to collector ---> Key: " + key + " | Value: " + value.toString());
+		Logger.log("Added to collector ---> Key: " + key + " | Value: " + value.toString());
+	}
+	
+	public static synchronized boolean removeData(String key) {
+		boolean remove = false;
+		if (existData(key)) {
+			data.remove(key);
+			remove = true;
+		}
+		return remove;
 	}
 	
 	private static synchronized String createNewKey(String key) {
@@ -93,7 +105,7 @@ public class DataCollector {
 			returnValue = data.get(key);
 		} else {
 			String errorMessage = "Key does not exist in data collector: " + key;
-			System.out.println(errorMessage);
+			Logger.error(errorMessage);
 			printPrettyData();
 		}
 		
@@ -108,20 +120,20 @@ public class DataCollector {
 	
 	public static synchronized void printData() {
 		if (hasValue()) {
-			System.out.println("Data collector: " + data.toString());
+			Logger.forceLog("Data collector: " + data.toString());
 		} else {
-			System.out.println("Data is empty or null");
+			Logger.forceLog("Data is empty or null");
 		}
 	}
 	
 	public static synchronized void printPrettyData() {
 		if (data != null && !data.isEmpty()) {
-			System.out.println("Data collector:");
+			Logger.forceLog("Data collector:");
 			for (Entry<String, Object> entry : data.entrySet()) {
-				System.out.println("Key: " + entry.getKey() + " | Value: " + String.valueOf(entry.getValue()));
+				Logger.forceLog("Key: " + entry.getKey() + " | Value: " + String.valueOf(entry.getValue()));
 			}
 		} else {
-			System.out.println("Data is empty or null");
+			Logger.forceLog("Data is empty or null");
 		}
 	}
 
