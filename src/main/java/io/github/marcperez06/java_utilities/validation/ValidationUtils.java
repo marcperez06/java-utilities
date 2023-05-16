@@ -151,7 +151,7 @@ public class ValidationUtils {
 					String str = (String) obj;
 					isEmpty = str.isEmpty();
 				} else {
-					isEmpty = false;
+					isEmpty = objPropertiesNotHaveValue(obj);
 				}
 			}
 
@@ -534,7 +534,7 @@ public class ValidationUtils {
 				
 				Field field = fields[i];
 				
-				if (field.get(obj) instanceof String
+				if (field.get(obj) instanceof String || field.get(obj).getClass().isArray()
 						|| field.get(obj) instanceof List || field.get(obj) instanceof Map) {
 					
 					isEmpty = isEmpty(obj);

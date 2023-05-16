@@ -165,6 +165,14 @@ public class StringUtils {
 		return contains;
 	}
 	
+	public static boolean valueContainsAnyWord(String value, List<String> words) {
+		boolean containsWord = false;
+		if (words != null) {
+			containsWord = valueContainsAnyWord(value, words.toArray(new String[words.size()]));
+		}
+		return containsWord;
+	}
+	
 	public static boolean valueContainsAnyWord(String value, String...words) {
 		boolean containsWord = false;
 		if (words.length > 0) {

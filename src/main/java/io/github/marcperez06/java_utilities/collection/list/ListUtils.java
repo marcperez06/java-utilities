@@ -186,7 +186,7 @@ public class ListUtils {
 		
 		if (list != null) {
 			int size = list.size();
-			array = (T[]) new Array[size];
+			array = (T[]) Array.newInstance(list.get(0).getClass(), list.size());
 			for (int i = 0; i < size; i++) {
 				array[i] = list.get(i);
 			}
