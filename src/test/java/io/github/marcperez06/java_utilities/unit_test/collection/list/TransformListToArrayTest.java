@@ -2,14 +2,11 @@ package io.github.marcperez06.java_utilities.unit_test.collection.list;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import io.github.marcperez06.java_utilities.collection.list.ListUtils;
-import io.github.marcperez06.java_utilities.threads.ThreadUtils;
-import io.github.marcperez06.java_utilities.unit_test.threads.task.TaskExample;
 
 public class TransformListToArrayTest {
 	

@@ -256,7 +256,7 @@ public class StringUtils {
 				builder.append(concatener);
 			}
 			
-			concat = cutStringWithOtherString(builder.toString(), concatener, 0);
+			concat = cutEndingPartOfString(builder.toString(), concatener);
 		}
 		return concat;
 	}
@@ -271,17 +271,38 @@ public class StringUtils {
 				builder.append(concatener);
 			}
 			
-			concat = cutStringWithOtherString(builder.toString(), concatener, 0);
+			concat = cutEndingPartOfString(builder.toString(), concatener);
 		}
 		return concat;
 	}
 	
-	public static String cutStringWithOtherString(String txt, String otherText, int start) {
+	public static String cutEndingPartOfString(String txt, String otherText) {
+		int end = txt.length() - otherText.length();
+		return substring(txt, 0, end);
+	}
+	
+	public static String cutStartingPartOfString(String txt, String otherText) {
+		int start = otherText.length();
+		int end = txt.length();
+		return substring(txt, start, end);
+	}
+	
+	/**
+	 * Returns substring of text, if can not cut text, return original text
+	 * @param txt - String text to cut
+	 * @param start - int starting char position of cut
+	 * @param end - int ending char position of cut
+	 * @return String - substring of text if can cut, otherwise return original text
+	 */
+	public static String substring(String txt, int start, int end) {
 		String cutText = txt;
-		if (txt != null && !txt.isEmpty()) {
-			int end = txt.length() - otherText.length();
+		boolean canCut = txt != null && !txt.isEmpty(); 
+		canCut &= start >= 0 && end >= 0;
+		
+		if (canCut) {
 			cutText = txt.substring(start, end);
 		}
+		
 		return cutText;
 	}
 
