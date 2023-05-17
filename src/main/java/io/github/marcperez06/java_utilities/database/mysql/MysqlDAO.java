@@ -1,5 +1,5 @@
 /**
- * Classe base para todos los DAO.
+ * Classe base para todos los DAO de Mysql.
  * @author Marc Perez Rodriguez
  */
 
@@ -38,7 +38,7 @@ public class MysqlDAO extends BaseDAO {
 		}
 		
 		String sql = sqlBuilder.toString();
-		sql = StringUtils.cutStringWithOtherString(sql, ", ", 0);
+		sql = StringUtils.cutEndingPartOfString(sql, ", ");
 		sql += ");";
 
 		int insert = super.db.executePreparedSQL(sql, sqlObject.getParameters());
@@ -57,7 +57,7 @@ public class MysqlDAO extends BaseDAO {
 			sql += sqlObject.getField(i) + " = ?, ";
 		}
 
-		sql = StringUtils.cutStringWithOtherString(sql, ", ", 0);
+		sql = StringUtils.cutEndingPartOfString(sql, ", ");
 		sql += " WHERE 1 = 1";
 
 		for (int i = 0; i < sqlObject.getWhereFieldsSize(); i++) {
