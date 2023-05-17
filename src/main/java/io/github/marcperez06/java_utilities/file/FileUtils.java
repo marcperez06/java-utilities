@@ -139,7 +139,7 @@ public class FileUtils {
 				text = text + lineText + "\n";
 			}
 			
-			text = StringUtils.cutStringWithOtherString(text, "\n", 0);
+			text = StringUtils.cutEndingPartOfString(text, "\n");
 
 		} catch (IOException ex) {
 			ex.printStackTrace();
