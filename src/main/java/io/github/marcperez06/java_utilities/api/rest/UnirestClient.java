@@ -4,9 +4,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import io.github.marcperez06.java_utilities.api.request.Request;
 import io.github.marcperez06.java_utilities.api.request.RequestProxy;
@@ -14,6 +17,8 @@ import io.github.marcperez06.java_utilities.api.request.Response;
 import io.github.marcperez06.java_utilities.api.rest.exceptions.RestClientException;
 import io.github.marcperez06.java_utilities.api.rest.objects.RestGenericObject;
 import kong.unirest.ContentType;
+import kong.unirest.Header;
+import kong.unirest.Headers;
 import kong.unirest.HttpRequest;
 import kong.unirest.HttpRequestWithBody;
 import kong.unirest.HttpResponse;
@@ -218,6 +223,7 @@ public class UnirestClient extends BaseRestClient {
     
     private <T> Response<T> asResponse(HttpResponse<T> unirestResponse) {
         Response<T> response = new Response<>(unirestResponse.getStatus());
+        response.setHeaders(this.getResponseHeaders(unirestResponse));
         response.setResponseObject(unirestResponse.getBody());
         if (unirestResponse.getParsingError().isPresent()) {
             response.setOriginalBody(unirestResponse.getParsingError().get().getOriginalBody());
@@ -225,6 +231,13 @@ public class UnirestClient extends BaseRestClient {
         }
 
         return response;
+    }
+    
+    private <T> Map<String, String> getResponseHeaders(HttpResponse<T> unirestResponse) {
+    	List<Header> unirestHeaders = unirestResponse.getHeaders().all();
+    	Map<String, String> responseHeaders = unirestHeaders.stream()
+    											.collect(Collectors.toMap(Header::getName, Header::getValue));
+    	return responseHeaders;
     }
 
 }

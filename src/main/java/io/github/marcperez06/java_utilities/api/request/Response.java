@@ -1,5 +1,7 @@
 package io.github.marcperez06.java_utilities.api.request;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 public class Response<T> extends ResponseTypeHolder<T> {
@@ -14,12 +16,14 @@ public class Response<T> extends ResponseTypeHolder<T> {
 	public static final int SERVER_ERROR = 500;
 
 	private final int statusCode;
+	private Map<String, String> headers;
 	private Optional<String> originalBody;
 	private Optional<T> body;
 	private Optional<Exception> error;
 	
 	public Response(int statusCode) {
 		this.statusCode = statusCode;
+		this.headers = new HashMap<>();
 		this.originalBody = Optional.empty();
 		this.body = Optional.empty();
 		this.error = Optional.empty();
@@ -27,6 +31,14 @@ public class Response<T> extends ResponseTypeHolder<T> {
 	
 	public int getStatusCode() {
 		return this.statusCode;
+	}
+	
+	public Map<String, String> getHeaders() {
+		return this.headers;
+	}
+	
+	public void setHeaders(Map<String, String> headers) {
+		this.headers = headers;
 	}
 	
 	public String getOriginalBody() {

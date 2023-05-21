@@ -8,10 +8,11 @@ import io.github.marcperez06.java_utilities.api.request.Response;
 import io.github.marcperez06.java_utilities.api.request.ResponseTypeHolder;
 import io.github.marcperez06.java_utilities.api.request.enums.HttpMethodEnum;
 import io.github.marcperez06.java_utilities.api.rest.UnirestClient;
+import io.github.marcperez06.java_utilities.api.rest.interfaces.IRestClient;
 
 public class GetRequestWithPathParamsTest {
 	
-	private UnirestClient api;
+	private IRestClient api;
 	
 	@Before
 	public void beforeTest() {

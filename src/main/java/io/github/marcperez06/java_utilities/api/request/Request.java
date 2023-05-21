@@ -10,6 +10,12 @@ import io.github.marcperez06.java_utilities.api.request.enums.HttpMethodEnum;
 public class Request {
 
 	private static final String EMPTY_URL = "";
+	private static final String ACCEPT = "Accept";
+	private static final String CONTENT_TYPE = "Content-Type";
+	public static final String ALL = "*/*";
+	public static final String JSON = "application/json";
+	public static final String FORM_DATA = "multipart/form-data";
+	
 	private final HttpMethodEnum method;
 
 	private String url;
@@ -151,6 +157,16 @@ public class Request {
 
 	public void sendAsForm(boolean sendAsForm) {
 		this.sendAsForm = sendAsForm;
+	}
+	
+	public void jsonRequest() {
+		this.addHeader(ACCEPT, ALL);
+		this.addHeader(CONTENT_TYPE, JSON);
+	}
+	
+	public void formRequest() {
+		this.addHeader(ACCEPT, ALL);
+		this.addHeader(CONTENT_TYPE, FORM_DATA);
 	}
 	
 }
