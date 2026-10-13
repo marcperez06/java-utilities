@@ -4,7 +4,7 @@
 
 	<groupId>io.github.marcperez06</groupId>
 	<artifactId>java-utilities</artifactId>
-	<version>0.1.6</version>
+	<version>0.1.7</version>
 	<packaging>jar</packaging>
 
 	<name>java-utilities</name>
@@ -48,8 +48,8 @@
 		<microsoft.jdbc.version>12.2.0.jre8</microsoft.jdbc.version>
 		<pdf.version>2.0.27</pdf.version>
 		<javax.activation>1.1.1</javax.activation>
-		<unirest.version>4.10.1</unirest.version>
-		<unirest.gson.version>4.2.9</unirest.gson.version>
+		<unirest.version>3.14.2</unirest.version>
+		<unirest.gson.version>3.14.2</unirest.gson.version>
 		<jakarta.version>5.0.0</jakarta.version>
 		<logging.version>1.2</logging.version>
 	</properties>
@@ -142,7 +142,7 @@
 		<!-- https://mvnrepository.com/artifact/com.konghq/unirest-java-core -->
 		<dependency>
 		    <groupId>com.konghq</groupId>
-		    <artifactId>unirest-java-core</artifactId>
+		    <artifactId>unirest-java</artifactId>
 		    <version>${unirest.version}</version>
 		    <scope>provided</scope>
 		</dependency>

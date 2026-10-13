@@ -15,14 +15,14 @@ import io.github.marcperez06.java_utilities.api.request.RequestProxy;
 import io.github.marcperez06.java_utilities.api.request.Response;
 import io.github.marcperez06.java_utilities.api.rest.exceptions.RestClientException;
 import io.github.marcperez06.java_utilities.api.rest.objects.RestGenericObject;
-import kong.unirest.core.ContentType;
-import kong.unirest.core.Header;
-import kong.unirest.core.HttpRequest;
-import kong.unirest.core.HttpRequestWithBody;
-import kong.unirest.core.HttpResponse;
-import kong.unirest.core.ObjectMapper;
-import kong.unirest.core.Unirest;
-import kong.unirest.core.Proxy;
+import kong.unirest.ContentType;
+import kong.unirest.Header;
+import kong.unirest.HttpRequest;
+import kong.unirest.HttpRequestWithBody;
+import kong.unirest.HttpResponse;
+import kong.unirest.ObjectMapper;
+import kong.unirest.Unirest;
+import kong.unirest.Proxy;
 import kong.unirest.gson.GsonObjectMapper;
 
 public class UnirestClient extends BaseRestClient {

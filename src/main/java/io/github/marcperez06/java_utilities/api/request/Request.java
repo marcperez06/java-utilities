@@ -34,12 +34,12 @@ public class Request {
 
 	public Request(HttpMethodEnum method) {
 		this(null, method, EMPTY_URL);
-		this.setResponseType(new ResponseTypeHolder<Void>() {});
+		this.setResponseType(ResponseTypeHolderFactory.voidResponse());
 	}
 	
 	public Request(HttpMethodEnum method, String url) {
 		this(null, method, url);
-		this.setResponseType(new ResponseTypeHolder<Void>() {});
+		this.setResponseType(ResponseTypeHolderFactory.voidResponse());
 	}
 	
 	public Request(RequestCredentials credentials, HttpMethodEnum method, String url) {

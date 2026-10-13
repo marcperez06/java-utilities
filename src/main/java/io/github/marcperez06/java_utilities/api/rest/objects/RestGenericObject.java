@@ -2,7 +2,7 @@ package io.github.marcperez06.java_utilities.api.rest.objects;
 
 import java.lang.reflect.Type;
 
-import kong.unirest.core.GenericType;
+import kong.unirest.GenericType;
 
 public class RestGenericObject<T> extends GenericType<T> {
 	
