@@ -14,26 +14,64 @@ public class RandomDataGenerator {
     private static final String CHARS_WITH_NUMBERS = CHARS + NUMBERS;
     
     public static String getStringWithNumbers(int length) {
-        return geenerateRandomString(CHARS_WITH_NUMBERS, length);
+        return generateRandomString(CHARS_WITH_NUMBERS, length);
     }
     
     public static String getString(int length) {
-        return geenerateRandomString(CHARS, length);
+        return generateRandomString(CHARS, length);
     }
     
     public static String getStringInLowerCase(int length) {
-        return geenerateRandomString(CHARS_LOWER, length);
+        return generateRandomString(CHARS_LOWER, length);
     }
     
     public static String getStringInUpperCase(int length) {
-        return geenerateRandomString(CHARS_UPPER, length);
+        return generateRandomString(CHARS_UPPER, length);
     }
     
     public static String getStringWithOnlyNumbers(int length) {
-        return geenerateRandomString(NUMBERS, length);
+        return generateRandomString(NUMBERS, length);
     }
     
-    private static String geenerateRandomString(String source, int length ) {
+    public static Integer getInteger(int length) {
+        return Integer.valueOf(generateRandomString(NUMBERS, length));
+    }
+    
+    public static Double getDouble(int length) {
+        return getDouble(length, 0);
+    }
+    
+    public static Double getDouble(int wholeLength, int decimalLength) {
+    	Double whole = Double.valueOf(0);
+    	if (wholeLength > 0) {
+    		whole = Double.valueOf(generateRandomString(NUMBERS, wholeLength));
+    	}
+    	
+    	Double decimal = Double.valueOf(0);
+    	if (decimalLength > 0) {
+    		decimal = Double.valueOf("0." + generateRandomString(NUMBERS, decimalLength));	
+    	}
+        return whole + decimal;
+    }
+    
+    public static Long getLong(int length) {
+        return getLong(length, 0);
+    }
+    
+    public static Long getLong(int wholeLength, int decimalLength) {
+    	Long whole = Long.valueOf(0);
+    	if (wholeLength > 0) {
+    		whole = Long.valueOf(generateRandomString(NUMBERS, wholeLength));
+    	}
+    	
+    	Long decimal = Long.valueOf(0);
+    	if (decimalLength > 0) {
+    		Long.valueOf("0." + generateRandomString(NUMBERS, decimalLength));
+    	}
+        return whole + decimal;
+    }
+    
+    private static String generateRandomString(String source, int length ) {
     	Random random = new Random();
         StringBuilder stringBuilder = new StringBuilder();
         

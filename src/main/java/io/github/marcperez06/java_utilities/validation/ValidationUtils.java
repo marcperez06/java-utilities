@@ -75,6 +75,54 @@ public class ValidationUtils {
 		return equals(lowerA, lowerB);
 	}
 	
+	public static <T> boolean contains(T objA, T objB) {
+		boolean contains = false;
+
+		if (objA != null) {
+			contains = containsInherentOfClass(objA, objB);
+		} else if (objB != null) {
+			contains = containsInherentOfClass(objB, objA);
+		}
+		
+		return contains;
+	}
+	
+	private static <T> boolean containsInherentOfClass(T objA, T objB) {
+		boolean contains = false;
+
+		Class<?> clazz = null;
+		Method method = null;
+		
+		try {
+			
+			if (objA != null) {
+				clazz = objA.getClass();
+				method = clazz.getDeclaredMethod("contains", clazz);
+				method.setAccessible(true);
+				contains = (Boolean) method.invoke(objA, objB);
+			}
+			
+		} catch (NoSuchMethodException e) {
+			String a = (String) objA;
+			String b = (String) objB;
+			contains = a.contains(b);
+		} catch (Exception e) {
+			contains = false;
+		}
+
+		return contains;
+	}
+	
+	public static boolean containsIgnoreCase(String a, String b) {
+		return containsLowerCase(a, b);
+	}
+	
+	public static boolean containsLowerCase(String a, String b) {
+		String lowerA = (a != null) ? a.toLowerCase() : null;
+		String lowerB = (b != null) ? b.toLowerCase() : null;
+		return contains(lowerA, lowerB);
+	}
+	
 	public static <T> boolean isNaN(T obj) {
 		boolean result = true;
 		try {
