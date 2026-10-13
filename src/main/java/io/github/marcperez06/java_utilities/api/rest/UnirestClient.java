@@ -234,10 +234,15 @@ public class UnirestClient extends BaseRestClient {
     }
     
     private <T> Map<String, String> getResponseHeaders(HttpResponse<T> unirestResponse) {
-    	List<Header> unirestHeaders = unirestResponse.getHeaders().all();
-    	Map<String, String> responseHeaders = unirestHeaders.stream()
-    											.collect(Collectors.toMap(Header::getName, Header::getValue));
-    	return responseHeaders;
+        List<Header> unirestHeaders = unirestResponse.getHeaders().all();
+        Map<String, String> responseHeaders = unirestHeaders.stream()
+                                                .collect(Collectors.toMap(
+                                                    Header::getName, 
+                                                    Header::getValue, 
+                                                    (existing, replacement) -> existing + ", " + replacement
+                                                ));
+        return responseHeaders;
     }
+
 
 }
