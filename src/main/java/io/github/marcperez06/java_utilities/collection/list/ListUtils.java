@@ -27,6 +27,19 @@ public class ListUtils {
 		return exist;
 	}
 	
+	public static <T> boolean containsValueInList(List<T> list, T value) {
+		boolean contains = false;
+		if (list != null) {
+		
+			for (int i = 0; i < list.size() && !contains; i++) {
+				contains = ValidationUtils.contains(list.get(i), value);
+			}
+			
+		}
+		
+		return contains;
+	}
+	
 	public static <T> boolean addObjectInList(List<T> list, T value) {
 		boolean success = false;
 		
