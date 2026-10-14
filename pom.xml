@@ -4,7 +4,7 @@
 
 	<groupId>io.github.marcperez06</groupId>
 	<artifactId>java-utilities</artifactId>
-	<version>0.1.7</version>
+	<version>0.1.8</version>
 	<packaging>jar</packaging>
 
 	<name>java-utilities</name>
@@ -144,7 +144,6 @@
 		    <groupId>com.konghq</groupId>
 		    <artifactId>unirest-java</artifactId>
 		    <version>${unirest.version}</version>
-		    <scope>provided</scope>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/com.konghq/unirest-object-mappers-gson -->
