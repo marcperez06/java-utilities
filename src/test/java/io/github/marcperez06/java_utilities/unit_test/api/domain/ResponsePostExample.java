@@ -2,23 +2,57 @@ package io.github.marcperez06.java_utilities.unit_test.api.domain;
 
 public class ResponsePostExample {
 	
-	private boolean success;
+	private String title;
+	private String body;
+	private int userId;
+	private int id;
 	
 	public ResponsePostExample() {
-		this.success = false;
-	}
-
-	public boolean isSuccess() {
-		return this.success;
-	}
-
-	public void setSuccess(boolean success) {
-		this.success = success;
+		this.title = "";
+		this.body = "";
+		this.userId = -1;
+		this.id = -1;
 	}
 	
+	public String getTitle() {
+		return this.title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getBody() {
+		return this.body;
+	}
+
+	public void setBody(String body) {
+		this.body = body;
+	}
+
+	public int getUserId() {
+		return this.userId;
+	}
+
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
+
+	public int getId() {
+		return this.id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	@Override
 	public String toString() {
-		return "{success : " + this.success + "}";
+		String toString = "{title : " + this.title + ",\n";
+		toString += "body : " + this.body + ",\n";
+		toString += "userId : " + this.userId + ",\n";
+		toString += "id : " + this.id + "}";
+		return toString;
 	}
 
 }

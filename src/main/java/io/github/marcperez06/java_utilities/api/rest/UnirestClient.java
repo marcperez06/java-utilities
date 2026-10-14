@@ -128,8 +128,8 @@ public class UnirestClient extends BaseRestClient {
         try {
         	HttpRequest<?> unirestRequest = this.createRequest(request);
         	
-        	this.addCredentials(unirestRequest, request);
-        	this.addRequestParams(unirestRequest, request);
+        	unirestRequest = this.addCredentials(unirestRequest, request);
+        	unirestRequest = this.addRequestParams(unirestRequest, request);
 			
 			if (request.noResponseObjectNeeded()) {
 	            unirestResponse = (HttpResponse<T>) unirestRequest.asEmpty();
@@ -168,7 +168,7 @@ public class UnirestClient extends BaseRestClient {
     	return unirestRequest;
     }
     
-    private void addCredentials(HttpRequest<?> unirestRequest, Request request) {
+    private HttpRequest<?> addCredentials(HttpRequest<?> unirestRequest, Request request) {
     	if (request.useCredentials()) {
 			if (request.useBearerToken()) {
 				String token = request.getCredentials().getToken();
@@ -179,24 +179,27 @@ public class UnirestClient extends BaseRestClient {
 				unirestRequest = unirestRequest.basicAuth(user, password);
 			}
 		}
+    	return unirestRequest;
     }
     
-    private void addRequestParams(HttpRequest<?> unirestRequest, Request request) {
+    private HttpRequest<?> addRequestParams(HttpRequest<?> unirestRequest, Request request) {
 		unirestRequest.routeParam(request.getRouteParams());
 		unirestRequest.queryString(request.getQueryParams());
 		unirestRequest.headers(request.getHeaders());
 
 		if (unirestRequest instanceof HttpRequestWithBody) {
 			if (request.sendAsForm()) {
-				this.sendBodyAsFormData(request, unirestRequest);
+				unirestRequest = this.sendBodyAsFormData(request, unirestRequest);
 			} else {
 				unirestRequest = ((HttpRequestWithBody) unirestRequest).body(request.getBody());
 			}
 		}
+		
+		return unirestRequest;
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
-	private void sendBodyAsFormData(Request request, HttpRequest unirestRequest) {
+	private HttpRequest<?> sendBodyAsFormData(Request request, HttpRequest<?> unirestRequest) {
     	HttpRequestWithBody body = (HttpRequestWithBody) unirestRequest;
         Map<String, Object> map = (Map<String, Object>) request.getBody();
         for (Entry<String, Object> entry : map.entrySet()) {
@@ -217,6 +220,8 @@ public class UnirestClient extends BaseRestClient {
         		body.field(key, value);
         	}
         }
+        
+        return body;
     }
     
     private <T> Response<T> asResponse(HttpResponse<T> unirestResponse) {
