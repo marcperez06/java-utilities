@@ -1,9 +1,3 @@
-/**
- * Classe Statica usada para leer y escribir los Txt.
- * @author Marc P�rez - 173287
- *
- */
-
 package io.github.marcperez06.java_utilities.file;
 
 import java.io.BufferedReader;
@@ -14,6 +8,11 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,14 +20,36 @@ import java.util.Map;
 
 import io.github.marcperez06.java_utilities.strings.StringUtils;
 
+/**
+ * Static utility class used for file and directory operations such as reading,
+ * writing, creating, and deleting files and directories.
+ * 
+ * @author marcperez06
+ */
 public class FileUtils {
 
-	// --- CREACION DEL FICHERO ---
-	
 	private static final String DIRECTORY = "directory";
 	private static final String FILE = "file";
 	
 	private FileUtils() {}
+	
+	// --- GET FILE NAME ---
+	
+	/**
+	 * Returns the name of the file specified by the file path.
+	 * @param filePath - String path of the file
+	 * @return String - the name of the file, or empty string if it does not exist
+	 */
+	public static String getName(String filePath) {
+		String name = "";
+		if (existFile(filePath)) {
+			File file = new File(filePath);
+			name = file.getName();
+		}
+		return name;
+	}
+	
+	// --- CREACION DEL FICHERO ---
 	
 	/**
 	 * Returns true if exist file, false otherwise
@@ -47,6 +68,25 @@ public class FileUtils {
 		}
 		
 		return existFile;
+	}
+	
+	/**
+	 * Returns true if exist directory, false otherwise
+	 * @param path - String
+	 * @return boolean - true if exist directory, false otherwise
+	 */
+	public static boolean existDirectory(String path) {
+		boolean existDirectory = false;
+		
+		try {
+			File file = new File(path);
+			existDirectory = file.exists() && file.isDirectory();
+		} catch (Exception e) {
+			existDirectory = false;
+			e.printStackTrace();
+		}
+		
+		return existDirectory;
 	}
 	
 	/**
@@ -129,7 +169,12 @@ public class FileUtils {
 	
 	// --- LECTURAS SIMPLES ---
 	
-	public static String getStringOfFile(String path) {
+	/**
+	 * Reads the content of a file and returns it as a String.
+	 * @param path - String path of the file
+	 * @return String - the content of the file
+	 */
+	public static String readFile(String path) {
 		String lineText = "";
 		String text = "";
 
@@ -148,7 +193,12 @@ public class FileUtils {
 		return text;
 	}
 	
-	public static List<String> getStringListOfFile(String path) {
+	/**
+	 * Reads a file line by line and returns a list of lines.
+	 * @param path - String path of the file
+	 * @return List&lt;String&gt; - list containing each line of the file
+	 */
+	public static List<String> readFileSplitByLine(String path) {
 		String lineText;
 		List<String> lines = new ArrayList<String>();
 		
@@ -166,7 +216,14 @@ public class FileUtils {
 		return lines;
 	}
 	
-	public static List<String> getStringListOfFileIgnoringLinesThatContainsWords(String path, String...wordsToIgnore) {
+	/**
+	 * Reads a file line by line, ignoring lines that contain any of the specified words or are empty,
+	 * and returns the remaining lines as a list.
+	 * @param path - String path of the file
+	 * @param wordsToIgnore - varargs array of words to ignore in lines
+	 * @return List&lt;String&gt; - list of filtered lines
+	 */
+	public static List<String> readFileSplitByLineIgnoringLinesThatContainsWords(String path, String...wordsToIgnore) {
 		String lineText = "";
 		List<String> lines = new ArrayList<String>();
 		boolean ignore = false;
@@ -198,6 +255,41 @@ public class FileUtils {
 		return lines;
 	}
 	
+	/**
+	 * Reads all bytes from a file using UTF-8 charset and returns them as a String.
+	 * @param filePath - String path of the file
+	 * @return String - the content of the file decoded as UTF-8 string
+	 */
+	public static String readBytesOfFile(String filePath) {
+		return readBytesOfFile(filePath, StandardCharsets.UTF_8);
+	}
+	
+	/**
+	 * Reads all bytes from a file using the specified charset and returns them as a String.
+	 * @param filePath - String path of the file
+	 * @param charset - Charset to use for decoding
+	 * @return String - the content of the file decoded with the specified charset
+	 */
+	public static String readBytesOfFile(String filePath, Charset charset) {
+		String bytes = "";
+		if (existFile(filePath)) {
+	
+			try {
+				Path path = Paths.get(filePath);
+	        	bytes = new String(Files.readAllBytes(path), charset);	
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+        	
+		}
+		return bytes;
+	}
+	
+	/**
+	 * Parses a CSV file and returns a map where keys are column headers and values are lists of column values.
+	 * @param path - String path of the CSV file
+	 * @return Map&lt;String, List&lt;String&gt;&gt; - map representation of the CSV data
+	 */
 	public static Map<String, List<String>> getMapOfCsv(String path) {
 		Map<String, List<String>> map = new HashMap<String, List<String>>();
 		String lineText = "";
@@ -238,7 +330,12 @@ public class FileUtils {
 	
 	// --- LECTURAS MULTIPLES ---
 	
-	public static String getStringOfAllFilesInOneDirectory(String path) {
+	/**
+	 * Reads all text files in a specified directory and concatenates their contents into a single String.
+	 * @param path - String path of the directory
+	 * @return String - concatenated content of all files in the directory
+	 */
+	public static String readAllFilesInOneDirectory(String path) {
 		/* directory to process */
 		File inDir = new File(path);
 		File[] flist = inDir.listFiles();
@@ -248,14 +345,20 @@ public class FileUtils {
 		
 		for (int f = 0; f < flist.length; f++) {
 			floc = flist[f].getAbsolutePath();
-			text = getStringOfFile(floc);
+			text = readFile(floc);
 			finaltext = finaltext + text;
 		}
 
 		return finaltext;
 	}
 	
-	public static List<String> getStringListOfAllFilesInOneDirectory(String path) {
+	/**
+	 * Reads all text files in a specified directory and returns a list of strings,
+	 * where each element represents the content of a file.
+	 * @param path - String path of the directory
+	 * @return List&lt;String&gt; - list containing the text content of each file
+	 */
+	public static List<String> readAllFilesSplitByLineInOneDirectory(String path) {
 		/* directory to process */
 		File inDir = new File(path);
 		File[] flist = inDir.listFiles();
@@ -266,7 +369,7 @@ public class FileUtils {
 		if (flist != null) {
 			for (int f = 0; f < flist.length; f++) {
 				floc = flist[f].getAbsolutePath();
-				text = getStringOfFile(floc);
+				text = readFile(floc);
 				if (text.isEmpty() == false) {
 					listOfFileText.add(text);
 				}
@@ -276,6 +379,11 @@ public class FileUtils {
 		return listOfFileText;
 	}
 	
+	/**
+	 * Returns a list of absolute paths for all files and directories contained within the specified directory.
+	 * @param directory - String path of the directory
+	 * @return List&lt;String&gt; - list of absolute paths
+	 */
 	public static List<String> getListOfAbsolutePathsInDirectory(String directory) {
 		File inDir = new File(directory);
 		File[] flist = inDir.listFiles();
@@ -375,6 +483,16 @@ public class FileUtils {
 		}
 
 		return write;
+	}
+	
+	/**
+	 * Write a file using UTF-8 encoding, if not exists, creates it
+	 * @param txt - String
+	 * @param path - String
+	 * @return boolean - true if write the file, false otherwise
+	 */
+	public static boolean writeTxtWithEncoding(String txt, String path) {
+		return writeTxtWithEncoding(txt, path, "UTF-8");
 	}
 	
 	/**

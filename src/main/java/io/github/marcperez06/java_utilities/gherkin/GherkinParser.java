@@ -57,7 +57,7 @@ public class GherkinParser {
 	public void parseGherkin() {
 		if (!this.gherkinFilePath.isEmpty()) {
 			
-			this.lines = FileUtils.getStringListOfFile(this.gherkinFilePath);
+			this.lines = FileUtils.readFileSplitByLine(this.gherkinFilePath);
 			
 			GherkinCriteria feature = this.getFeature();
 			
