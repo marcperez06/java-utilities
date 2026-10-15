@@ -9,16 +9,15 @@ import io.github.marcperez06.java_utilities.reflection.ReflectionUtils;
 
 public class GenericFactory {
 
-	public static <T> T createPageFromClassName(String className, Object...args) {
-		T page = null;
+	public static <T> T newInstance(String className, Object...args) {
+		T newInstance = null;
 		try {
 			Class<?> clazz = Class.forName(className);
-			page = newInstance(clazz, args);
+			newInstance = newInstance(clazz, args);
 		} catch (Exception e) {
-			page = null;
-		}		
-		//Assert.assertNotNull("Can not create the page " + className, page);
-		return page;
+			newInstance = null;
+		}
+		return newInstance;
 	}
 	
 	@SuppressWarnings("unchecked")
