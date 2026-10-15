@@ -1,6 +1,6 @@
 # java-utilities
 
-[![Maven Central](https://img.shields.io/badge/maven-v0.1.9-blue.svg)](http://maven.apache.org)
+[![Maven Central](https://img.shields.io/badge/maven-v0.2.0-blue.svg)](http://maven.apache.org)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A comprehensive collection of useful Java utility classes and helper methods designed to simplify common programming tasks across various projects (file handling, string manipulation, database access, REST clients, cryptography, excel/csv parsing, and more).
