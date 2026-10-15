@@ -51,7 +51,7 @@ public class Csv {
 	}
 	
 	private void readCsv() {
-		this.lines = FileUtils.getStringListOfFile(this.csvPath);
+		this.lines = FileUtils.readFileSplitByLine(this.csvPath);
 		this.content = FileUtils.getMapOfCsv(this.csvPath);
 	}
 	
